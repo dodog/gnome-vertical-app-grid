@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: VertiGrid 1.0\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-12 00:00+0000\n"
+"Report-Msgid-Bugs-To: https://github.com/dodog/vertigrid/issues\n"
+"POT-Creation-Date: 2026-07-29 21:01+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jozef Gaal <preklady@mayday.sk>\n"
 "Language-Team: Jozef Gaal <preklady@mayday.sk>\n"
@@ -17,177 +17,131 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.9\n"
 
-msgid "Favorites"
-msgstr "Obľúbené"
-
-msgid "All Apps"
-msgstr "Všetky aplikácie"
-
-msgid "Other"
-msgstr "Ostatné"
-
+#: extension.js:314
 msgid "Remove from Favorites"
 msgstr "Odstrániť z obľúbených"
 
+#: extension.js:315
 msgid "Add to Favorites"
 msgstr "Pridať medzi obľúbené"
 
-msgid "Preferences"
-msgstr "Predvoľby"
-
-msgid "App Grid"
-msgstr "Mriežka aplikácií"
-
-msgid "App Sorting"
-msgstr "Zoradenie aplikácií"
-
-msgid "Favorites Sorting"
-msgstr "Zoradenie obľúbených"
-
-msgid "Most Used"
-msgstr "Najpoužívanejšie"
-
-msgid "Alphabetical"
-msgstr "Abecedne"
-
-msgid "As in Dash"
-msgstr "Ako v Dash"
-
-msgid "Show Favorites Section"
-msgstr "Zobraziť sekciu Obľúbených"
-
-msgid "Smooth Scrolling"
-msgstr "Plynulé posúvanie"
-
-msgid "Customization"
-msgstr "Prispôsobenie"
-
-msgid "Columns"
-msgstr "Počet stĺpcov"
-
-msgid "Icon Size"
-msgstr "Veľkosť ikony"
-
-msgid "Icon Spacing"
-msgstr "Rozostup ikon"
-
-msgid "Show favorites in app grid"
-msgstr "Zobraziť obľúbené položky v mriežke aplikácií"
-
-msgid ""
-"When enabled, applications pinned to favorites will appear in the apps grid"
-msgstr ""
-"Ak je táto funkcia zapnutá, aplikácie pripnuté do obľúbených sa zobrazia v "
-"mriežke aplikácií"
-
-msgid "Group by Category"
-msgstr "Zoskupiť podľa kategórie"
-
-msgid "Edit Categories Profile"
-msgstr "Upraviť profil kategórií"
-
-msgid "Open the categories configuration file"
-msgstr "Otvoriť konfiguračný súbor kategórií"
-
+#: categories.js:101
 msgid "Development"
 msgstr "Vývoj"
 
+#: categories.js:106
 msgid "Office"
 msgstr "Kancelária"
 
+#: categories.js:111
 msgid "Network"
 msgstr "Sieť"
 
+#: categories.js:116
 msgid "AudioVideo"
 msgstr "AudioVideo"
 
+#: categories.js:121
 msgid "Audio"
 msgstr "Audio"
 
+#: categories.js:126
 msgid "Video"
 msgstr "Video"
 
+#: categories.js:131
 msgid "Graphics"
 msgstr "Grafika"
 
+#: categories.js:136
 msgid "Education"
 msgstr "Vzdelávanie"
 
+#: categories.js:141
 msgid "Game"
 msgstr "Hry"
 
+#: categories.js:146
 msgid "Utility"
 msgstr "Nástroje"
 
+#: categories.js:151
 msgid "Accessories"
 msgstr "Príslušenstvo"
 
+#: categories.js:156
 msgid "System"
 msgstr "Systém"
 
+#: categories.js:161
 msgid "Settings"
 msgstr "Nastavenia"
 
-msgid "Show Workspaces Bar"
-msgstr "Zobraziť prehľad pracovných plôch"
+#: appDisplay.js:89 appDisplay.js:375 appDisplay.js:605
+msgid "Favorites"
+msgstr "Obľúbené"
 
-msgid "Show workspace thumbnails at the top of the Overview"
-msgstr "Zobraziť miniatúry pracovných priestorov v hornej časti prehľadu"
+#: appDisplay.js:96
+msgid "All Apps"
+msgstr "Všetky aplikácie"
 
-msgid "Category Label Size"
-msgstr "Veľkosť písma ponuky kategórií"
+#: appDisplay.js:440 appDisplay.js:619
+msgid "Other"
+msgstr "Ostatné"
 
-msgid "Adjust the font size shown in the category navigation."
-msgstr "Nastaviť veľkosť písma zobrazeného v prehľade kategórií."
-
-msgid "Edit Custom Categories"
-msgstr "Upraviť vlastné kategórie"
-
-msgid "Cancel"
-msgstr "Zrušiť"
-
-msgid "Save"
-msgstr "Uložiť"
-
-msgid ""
-"Add a custom category, choose whether it is enabled, and optionally merge it "
-"into an existing category name (e.g. merge \"Fonts\" into "
-"\"Development\"). \n"
-"You can also set a custom sort order for any category, built-in or custom — "
-"lower numbers appear first."
-msgstr ""
-"Pridajte vlastnú kategóriu, určite, či má byť povolená, a prípadne ju zlúčte "
-"s názvom existujúcej kategórie (napr. zlúčiť „Písma“ s „Vývoj“). \n"
-"Pre každú kategóriu, či už predvolenú alebo vlastnú, si môžete tiež nastaviť "
-"vlastné poradie – nižšie čísla sa zobrazujú skôr."
-
-msgid "Category name (e.g. Fonts)"
-msgstr "Názov kategórie (napr. Písma)"
-
-msgid "Enabled"
-msgstr "Povolené"
-
-msgid "Built-in"
-msgstr "Vstavané"
-
-msgid "Merge into another category"
-msgstr "Zlúčiť do inej kategórie"
-
-msgid "Target category name (e.g. Webdesign)"
-msgstr "Názov cieľovej kategórie (napr. Webdizajn)"
-
+#: prefs.js:87
 msgid "Add category"
 msgstr "Pridať kategóriu"
 
-msgid " Failed to save custom categories:"
-msgstr " Uloženie vlastných kategórií sa nepodarilo:"
+#: prefs.js:99
+msgid "Save Custom Categories"
+msgstr "Uložiť vlastné kategórie"
 
+#: prefs.js:153
+msgid "Category name (e.g. Fonts)"
+msgstr "Názov kategórie (napr. Písma)"
+
+#: prefs.js:164
+msgid "Enabled"
+msgstr "Povolené"
+
+#: prefs.js:186
+msgid "Built-in"
+msgstr "Vstavané"
+
+#: prefs.js:201
+msgid "Merge into another category"
+msgstr "Zlúčiť do inej kategórie"
+
+#: prefs.js:208
+msgid "Target category name (e.g. Webdesign)"
+msgstr "Názov cieľovej kategórie (napr. Webdizajn)"
+
+#: prefs.js:233
+msgid "Custom order"
+msgstr "Vlastné poradie"
+
+#: prefs.js:252
+msgid "Lower numbers appear first"
+msgstr "Nižšie číslo sa zobrazí skôr"
+
+#: prefs.js:317
+msgid "Default categories"
+msgstr "Predvolené kategórie"
+
+#: prefs.js:359
+msgid "Failed to save custom categories: "
+msgstr "Uloženie vlastných kategórií sa nepodarilo: "
+
+#: prefs.js:371
 msgid "Custom Categories Saved"
 msgstr "Vlastné kategórie boli uložené"
 
+#: prefs.js:376
 msgid "OK"
 msgstr "Ok"
 
+#: prefs.js:402
 msgid ""
 "Your custom category settings have been \n"
 "saved and applied to the app grid."
@@ -195,32 +149,176 @@ msgstr ""
 "Vaše nastavenia vlastných kategórií boli \n"
 "uložené a použité v mriežke aplikácií."
 
-msgid "Duplicate category name: "
-msgstr "Duplicitný názov kategórie: "
-
-msgid "Enter a target category to merge \""
-msgstr "Zadajte cieľovú kategóriu, do ktorej chcete zlúčiť \""
-
-msgid "\" into, or uncheck \"Merge into another category\"."
-msgstr "\" alebo zrušte označenie políčka „Zlúčiť do inej kategórie“."
-
-msgid "Default categories"
-msgstr "Predvolené kategórie"
-
-msgid "Open the custom category editor"
-msgstr "Otvoriť editor vlastných kategórií"
-
-msgid "Custom order"
-msgstr "Vlastné poradie"
-
-msgid "Lower numbers appear first"
-msgstr "Nižšie číslo sa zobrazí skôr"
-
+#: prefs.js:444
 msgid "Category name cannot contain \"::\": "
 msgstr "Názov kategórie nemôže obsahovať \"::\": "
 
+#: prefs.js:452
+msgid "Duplicate category name: "
+msgstr "Duplicitný názov kategórie: "
+
+#: prefs.js:466
+msgid "Enter a target category to merge \""
+msgstr "Zadajte cieľovú kategóriu, do ktorej chcete zlúčiť \""
+
+#: prefs.js:466
+msgid "\" into, or uncheck \"Merge into another category\"."
+msgstr "\" alebo zrušte označenie políčka „Zlúčiť do inej kategórie“."
+
+#: prefs.js:473
 msgid "Merge target cannot contain \"::\": "
 msgstr "Cieľová kategória zlúčenia nemôže obsahovať \"::\": "
+
+#: prefs.ui:7 prefs.ui:12
+msgid "App Grid"
+msgstr "Mriežka aplikácií"
+
+#: prefs.ui:16
+msgid "App Sorting"
+msgstr "Zoradenie aplikácií"
+
+#: prefs.ui:20 prefs.ui:35
+msgid "Most Used"
+msgstr "Najpoužívanejšie"
+
+#: prefs.ui:21 prefs.ui:36
+msgid "Alphabetical"
+msgstr "Abecedne"
+
+#: prefs.ui:30
+msgid "Favorites Sorting"
+msgstr "Zoradenie obľúbených"
+
+#: prefs.ui:34
+msgid "As in Dash"
+msgstr "Ako v Dash"
+
+#: prefs.ui:50
+msgid "Show Favorites Section"
+msgstr "Zobraziť sekciu Obľúbených"
+
+#: prefs.ui:56
+msgid "Show favorites in app grid"
+msgstr "Zobraziť obľúbené položky v mriežke aplikácií"
+
+#: prefs.ui:57
+msgid ""
+"When enabled, applications pinned to favorites will appear in the apps grid"
+msgstr ""
+"Ak je táto funkcia zapnutá, aplikácie pripnuté do obľúbených sa zobrazia v "
+"mriežke aplikácií"
+
+#: prefs.ui:63
+msgid "Group by Category"
+msgstr "Zoskupiť podľa kategórie"
+
+#: prefs.ui:71
+msgid "Category Navigation"
+msgstr "Ponuka kategórií"
+
+#: prefs.ui:75
+msgid "Always Show Category Navigation"
+msgstr "Vždy zobraziť ponuku kategórií"
+
+#: prefs.ui:76
+msgid ""
+"Keep the left category list expanded at all times, instead of only showing "
+"it when you hover over it"
+msgstr ""
+"Ponechať zoznam kategórií na ľavej strane neustále zobrazený, namiesto toho, "
+"aby sa zobrazoval len pri prechode kurzorom nad ním"
+
+#: prefs.ui:86
+msgid "Smooth Scrolling"
+msgstr "Plynulé posúvanie"
+
+#: prefs.ui:92
+msgid "Show Workspaces Bar"
+msgstr "Zobraziť prehľad pracovných plôch"
+
+#: prefs.ui:93
+msgid "Show workspace thumbnails at the top of the Overview"
+msgstr "Zobraziť miniatúry pracovných priestorov v hornej časti prehľadu"
+
+#: prefs.ui:99
+msgid "Clip Long App Names"
+msgstr "Skrátiť dlhé názvy aplikácií"
+
+#: prefs.ui:100
+msgid ""
+"Show long app names on a single clipped line instead of wrapping to show the "
+"full name"
+msgstr ""
+"Zobrazovať dlhé názvy aplikácií na jednom skrátenom riadku namiesto toho, "
+"aby sa text zalomil a zobrazil sa celý názov"
+
+#: prefs.ui:108
+msgid "Customization"
+msgstr "Prispôsobenie"
+
+#: prefs.ui:112
+msgid "Columns"
+msgstr "Počet stĺpcov"
+
+#: prefs.ui:125
+msgid "Icon Size"
+msgstr "Veľkosť ikony"
+
+#: prefs.ui:138
+msgid "Icon Spacing"
+msgstr "Rozostup ikon"
+
+#: prefs.ui:151
+msgid "Category Label Size"
+msgstr "Veľkosť písma ponuky kategórií"
+
+#: prefs.ui:152
+msgid "Adjust the font size shown in the category navigation."
+msgstr "Nastaviť veľkosť písma zobrazeného v prehľade kategórií."
+
+#: prefs.ui:169 prefs.ui:174
+msgid "Custom Categories"
+msgstr "Vlastné kategórie"
+
+#: prefs.ui:175
+msgid ""
+"Add a custom category, choose whether it is enabled, and optionally merge it "
+"into an existing category (e.g. merge \"Fonts\" into \"Development\"). You "
+"can also set a custom sort order for any category, built-in or custom — "
+"lower numbers appear first."
+msgstr ""
+"Pridajte vlastnú kategóriu, určite, či má byť povolená, a prípadne ju zlúčte "
+"s názvom existujúcej kategórie (napr. zlúčiť „Písma“ s „Vývoj“). \n"
+"Pre každú kategóriu, či už predvolenú alebo vlastnú, si môžete tiež nastaviť "
+"vlastné poradie – nižšie čísla sa zobrazujú skôr."
+
+#~ msgid "VertiGrid"
+#~ msgstr "VertiGrid"
+
+#~ msgid ""
+#~ "VertiGrid: a vertical app grid with category grouping, navigation and "
+#~ "drag-and-drop support."
+#~ msgstr ""
+#~ "VertiGrid: vertikálna mriežka aplikácií s podporou kategorizácie, "
+#~ "navigácie a funkcie drag-and-drop."
+
+#~ msgid "Preferences"
+#~ msgstr "Predvoľby"
+
+#~ msgid "Edit Categories Profile"
+#~ msgstr "Upraviť profil kategórií"
+
+#~ msgid "Open the categories configuration file"
+#~ msgstr "Otvoriť konfiguračný súbor kategórií"
+
+#~ msgid "Cancel"
+#~ msgstr "Zrušiť"
+
+#~ msgid "Save"
+#~ msgstr "Uložiť"
+
+#~ msgid "Open the custom category editor"
+#~ msgstr "Otvoriť editor vlastných kategórií"
 
 #~ msgid ""
 #~ "Your custom category settings have been saved.\n"

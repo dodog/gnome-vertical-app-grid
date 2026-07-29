@@ -1,267 +1,264 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the vertigrid package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: VertiGrid 1.0\n"
+"Project-Id-Version: vertigrid 1.0\n"
 "Report-Msgid-Bugs-To: https://github.com/dodog/vertigrid/issues\n"
 "POT-Creation-Date: 2026-07-29 21:01+0200\n"
-"PO-Revision-Date: \n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"Language: de\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 3.9\n"
 
 #: extension.js:314
 msgid "Remove from Favorites"
-msgstr "Aus Favoriten entfernen"
+msgstr ""
 
 #: extension.js:315
 msgid "Add to Favorites"
-msgstr "Zu Favoriten hinzufügen"
+msgstr ""
 
 #: categories.js:101
 msgid "Development"
-msgstr "Entwicklung"
+msgstr ""
 
 #: categories.js:106
 msgid "Office"
-msgstr "Büro"
+msgstr ""
 
 #: categories.js:111
 msgid "Network"
-msgstr "Netzwerk"
+msgstr ""
 
 #: categories.js:116
 msgid "AudioVideo"
-msgstr "Audio & Video"
+msgstr ""
 
 #: categories.js:121
 msgid "Audio"
-msgstr "Audio"
+msgstr ""
 
 #: categories.js:126
 msgid "Video"
-msgstr "Video"
+msgstr ""
 
 #: categories.js:131
 msgid "Graphics"
-msgstr "Grafik"
+msgstr ""
 
 #: categories.js:136
 msgid "Education"
-msgstr "Bildung"
+msgstr ""
 
 #: categories.js:141
 msgid "Game"
-msgstr "Spiel"
+msgstr ""
 
 #: categories.js:146
 msgid "Utility"
-msgstr "Dienstprogramm"
+msgstr ""
 
 #: categories.js:151
 msgid "Accessories"
-msgstr "Zubehör"
+msgstr ""
 
 #: categories.js:156
 msgid "System"
-msgstr "System"
+msgstr ""
 
 #: categories.js:161
 msgid "Settings"
-msgstr "Einstellungen"
+msgstr ""
 
 #: appDisplay.js:89 appDisplay.js:375 appDisplay.js:605
 msgid "Favorites"
-msgstr "Favoriten"
+msgstr ""
 
 #: appDisplay.js:96
 msgid "All Apps"
-msgstr "Alle Anwendungen"
+msgstr ""
 
 #: appDisplay.js:440 appDisplay.js:619
 msgid "Other"
-msgstr "Sonstige"
+msgstr ""
 
 #: prefs.js:87
 msgid "Add category"
-msgstr "Kategorie hinzufügen"
+msgstr ""
 
 #: prefs.js:99
-#, fuzzy
 msgid "Save Custom Categories"
-msgstr "Benutzerdefinierte Kategorien speichern"
+msgstr ""
 
 #: prefs.js:153
 msgid "Category name (e.g. Fonts)"
-msgstr "Kategoriename (z.B. Schriftarten)"
+msgstr ""
 
 #: prefs.js:164
 msgid "Enabled"
-msgstr "Aktiviert"
+msgstr ""
 
 #: prefs.js:186
 msgid "Built-in"
-msgstr "Integriert"
+msgstr ""
 
 #: prefs.js:201
 msgid "Merge into another category"
-msgstr "In eine andere Kategorie zusammenführen"
+msgstr ""
 
 #: prefs.js:208
 msgid "Target category name (e.g. Webdesign)"
-msgstr "Zielkategoriename (z.B. Webdesign)"
+msgstr ""
 
 #: prefs.js:233
 msgid "Custom order"
-msgstr "Benutzerdefinierte Reihenfolge"
+msgstr ""
 
 #: prefs.js:252
 msgid "Lower numbers appear first"
-msgstr "Niedrigere Zahlen erscheinen zuerst"
+msgstr ""
 
 #: prefs.js:317
 msgid "Default categories"
-msgstr "Standardkategorien"
+msgstr ""
 
 #: prefs.js:359
-#, fuzzy
 msgid "Failed to save custom categories: "
-msgstr "Fehler beim Speichern der benutzerdefinierten Kategorien: "
+msgstr ""
 
 #: prefs.js:371
-#, fuzzy
 msgid "Custom Categories Saved"
-msgstr "Benutzerdefinierte Kategorien gespeichert"
+msgstr ""
 
 #: prefs.js:376
 msgid "OK"
-msgstr "OK"
+msgstr ""
 
 #: prefs.js:402
 msgid ""
 "Your custom category settings have been \n"
 "saved and applied to the app grid."
 msgstr ""
-"Ihre benutzerdefinierten Kategorieeinstellungen wurden \n"
-"gespeichert und auf das App-Raster angewendet."
 
 #: prefs.js:444
 msgid "Category name cannot contain \"::\": "
-msgstr "Kategoriename darf nicht \"::\" enthalten: "
+msgstr ""
 
 #: prefs.js:452
 msgid "Duplicate category name: "
-msgstr "Doppelter Kategoriename: "
+msgstr ""
 
 #: prefs.js:466
 msgid "Enter a target category to merge \""
-msgstr "Geben Sie eine Zielkategorie ein, um \""
+msgstr ""
 
 #: prefs.js:466
 msgid "\" into, or uncheck \"Merge into another category\"."
-msgstr "\" zusammenzuführen, oder deaktivieren Sie \"In eine andere Kategorie zusammenführen\"."
+msgstr ""
 
 #: prefs.js:473
 msgid "Merge target cannot contain \"::\": "
-msgstr "Ziel für Zusammenführung darf nicht \"::\" enthalten: "
+msgstr ""
 
 #: prefs.ui:7 prefs.ui:12
 msgid "App Grid"
-msgstr "Anwendungsübersicht"
+msgstr ""
 
 #: prefs.ui:16
 msgid "App Sorting"
-msgstr "Anwendungen sortieren nach"
+msgstr ""
 
 #: prefs.ui:20 prefs.ui:35
 msgid "Most Used"
-msgstr "Am meisten verwendet"
+msgstr ""
 
 #: prefs.ui:21 prefs.ui:36
 msgid "Alphabetical"
-msgstr "Alphabetisch"
+msgstr ""
 
 #: prefs.ui:30
 msgid "Favorites Sorting"
-msgstr "Favoriten sortieren nach"
+msgstr ""
 
 #: prefs.ui:34
 msgid "As in Dash"
-msgstr "Wie im Dash"
+msgstr ""
 
 #: prefs.ui:50
 msgid "Show Favorites Section"
-msgstr "Favoritenbereich anzeigen"
+msgstr ""
 
 #: prefs.ui:56
 msgid "Show favorites in app grid"
-msgstr "Favoriten im App-Raster anzeigen"
+msgstr ""
 
 #: prefs.ui:57
 msgid ""
 "When enabled, applications pinned to favorites will appear in the apps grid"
 msgstr ""
-"Wenn aktiviert, werden die an die Favoriten angehefteten Anwendungen im App-Raster angezeigt"
 
 #: prefs.ui:63
 msgid "Group by Category"
-msgstr "Nach Kategorie gruppieren"
+msgstr ""
 
 #: prefs.ui:71
 msgid "Category Navigation"
-msgstr "Kategorienavigation"
+msgstr ""
 
 #: prefs.ui:75
 msgid "Always Show Category Navigation"
-msgstr "Kategorienavigation immer anzeigen"
+msgstr ""
 
 #: prefs.ui:76
 msgid ""
 "Keep the left category list expanded at all times, instead of only showing "
 "it when you hover over it"
 msgstr ""
-"Die linke Kategorieliste immer aufgeklappt halten, anstatt sie nur beim Darüberfahren anzuzeigen"
 
 #: prefs.ui:86
 msgid "Smooth Scrolling"
-msgstr "Flüssiges Scrollen"
+msgstr ""
 
 #: prefs.ui:92
 msgid "Show Workspaces Bar"
-msgstr "Arbeitsflächenleiste anzeigen"
+msgstr ""
 
 #: prefs.ui:93
 msgid "Show workspace thumbnails at the top of the Overview"
-msgstr "Arbeitsflächen-Vorschaubilder oben in der Übersicht anzeigen"
+msgstr ""
 
 #: prefs.ui:99
 msgid "Clip Long App Names"
-msgstr "Lange Anwendungsnamen abschneiden"
+msgstr ""
 
 #: prefs.ui:100
 msgid ""
 "Show long app names on a single clipped line instead of wrapping to show the "
 "full name"
 msgstr ""
-"Lange Anwendungsnamen in einer einzigen abgeschnittenen Zeile anzeigen, anstatt sie umzubrechen, um den vollständigen Namen anzuzeigen"
 
 #: prefs.ui:108
 msgid "Customization"
-msgstr "Anpassung"
+msgstr ""
 
 #: prefs.ui:112
 msgid "Columns"
-msgstr "Spalten"
+msgstr ""
 
 #: prefs.ui:125
 msgid "Icon Size"
-msgstr "Symbolgröße"
+msgstr ""
 
 #: prefs.ui:138
 msgid "Icon Spacing"
-msgstr "Symbolabstand"
+msgstr ""
 
 #: prefs.ui:151
 msgid "Category Label Size"
@@ -269,12 +266,11 @@ msgstr ""
 
 #: prefs.ui:152
 msgid "Adjust the font size shown in the category navigation."
-msgstr "Passen Sie die Schriftgröße in der Kategorienavigation an."
+msgstr ""
 
 #: prefs.ui:169 prefs.ui:174
-#, fuzzy
 msgid "Custom Categories"
-msgstr "Benutzerdefinierte Kategorien"
+msgstr ""
 
 #: prefs.ui:175
 msgid ""
@@ -283,13 +279,3 @@ msgid ""
 "can also set a custom sort order for any category, built-in or custom — "
 "lower numbers appear first."
 msgstr ""
-"Fügen Sie eine benutzerdefinierte Kategorie hinzu, wählen Sie, ob sie aktiviert ist, und führen Sie sie optional mit einer vorhandenen Kategorie zusammen (z.B. \"Schriftarten\" in \"Entwicklung\" zusammenführen). Sie können auch eine benutzerdefinierte Sortierreihenfolge für jede Kategorie festlegen, ob integriert oder benutzerdefiniert — niedrigere Zahlen erscheinen zuerst."
-
-#~ msgid "Preferences"
-#~ msgstr "Einstellungen"
-
-#~ msgid "Edit Categories Profile"
-#~ msgstr "Kategorienprofil bearbeiten"
-
-#~ msgid "Open the categories configuration file"
-#~ msgstr "Kategorien-Konfigurationsdatei öffnen"

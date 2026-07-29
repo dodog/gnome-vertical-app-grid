@@ -1,10 +1,10 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: VertiGrid 1.0\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-12 00:00+0000\n"
+"Report-Msgid-Bugs-To: https://github.com/dodog/vertigrid/issues\n"
+"POT-Creation-Date: 2026-07-29 21:01+0200\n"
 "PO-Revision-Date: \n"
-"Last-Translator: Jozef Gaal <preklady@mayday.sk>\n"
+"Last-Translator: \n"
 "Language-Team: \n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
@@ -12,203 +12,272 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.9\n"
 
-msgid "Favorites"
-msgstr "Favoritos"
-
-msgid "All Apps"
-msgstr "Todos os aplicativos"
-
-msgid "Other"
-msgstr "Other"
-
+#: extension.js:314
 msgid "Remove from Favorites"
 msgstr "Remover dos favoritos"
 
+#: extension.js:315
 msgid "Add to Favorites"
 msgstr "Adicionar aos favoritos"
 
-msgid "Preferences"
-msgstr "Preferências"
-
-msgid "App Grid"
-msgstr "Grade de aplicativos"
-
-msgid "App Sorting"
-msgstr "Ordem dos aplicativos"
-
-msgid "Favorites Sorting"
-msgstr "Ordem dos favoritos"
-
-msgid "Most Used"
-msgstr "Mais usados"
-
-msgid "Alphabetical"
-msgstr "Alfabética"
-
-msgid "As in Dash"
-msgstr "Como no Dash"
-
-msgid "Show Favorites Section"
-msgstr "Exibir seção de favoritos"
-
-msgid "Smooth Scrolling"
-msgstr "Rolagem suave"
-
-msgid "Customization"
-msgstr "Personalização"
-
-msgid "Columns"
-msgstr "Colunas"
-
-msgid "Icon Size"
-msgstr "Tamanho dos ícones"
-
-msgid "Icon Spacing"
-msgstr "Espaçamento dos ícones"
-
-msgid "Show favorites in app grid"
-msgstr ""
-
-msgid ""
-"When enabled, applications pinned to favorites will appear in the apps grid"
-msgstr ""
-
-msgid "Group by Category"
-msgstr ""
-
-msgid "Edit Categories Profile"
-msgstr ""
-
-msgid "Open the categories configuration file"
-msgstr ""
-
+#: categories.js:101
 msgid "Development"
 msgstr ""
 
+#: categories.js:106
 msgid "Office"
 msgstr ""
 
+#: categories.js:111
 msgid "Network"
 msgstr ""
 
+#: categories.js:116
 msgid "AudioVideo"
 msgstr ""
 
+#: categories.js:121
 msgid "Audio"
 msgstr ""
 
+#: categories.js:126
 msgid "Video"
 msgstr ""
 
+#: categories.js:131
 msgid "Graphics"
 msgstr ""
 
+#: categories.js:136
 msgid "Education"
 msgstr ""
 
+#: categories.js:141
 msgid "Game"
 msgstr ""
 
+#: categories.js:146
 msgid "Utility"
 msgstr ""
 
+#: categories.js:151
 msgid "Accessories"
 msgstr ""
 
+#: categories.js:156
 msgid "System"
 msgstr ""
 
+#: categories.js:161
 msgid "Settings"
 msgstr ""
 
-msgid "Show Workspaces Bar"
-msgstr ""
+#: appDisplay.js:89 appDisplay.js:375 appDisplay.js:605
+msgid "Favorites"
+msgstr "Favoritos"
 
-msgid "Show workspace thumbnails at the top of the Overview"
-msgstr ""
+#: appDisplay.js:96
+msgid "All Apps"
+msgstr "Todos os aplicativos"
 
-msgid "Category Label Size"
-msgstr ""
+#: appDisplay.js:440 appDisplay.js:619
+msgid "Other"
+msgstr "Other"
 
-msgid "Adjust the font size shown in the category navigation."
-msgstr ""
-
-#, fuzzy
-#| msgid "Edit Categories Profile"
-msgid "Edit Custom Categories"
-msgstr "Edit Categories Profile"
-
-msgid "Cancel"
-msgstr ""
-
-msgid "Save"
-msgstr ""
-
-msgid ""
-"Add a custom category, choose whether it is enabled, and optionally merge it "
-"into an existing category name (e.g. merge \"Fonts\" into "
-"\"Development\"). \n"
-"You can also set a custom sort order for any category, built-in or custom — "
-"lower numbers appear first."
-msgstr ""
-
-msgid "Category name (e.g. Fonts)"
-msgstr ""
-
-msgid "Enabled"
-msgstr ""
-
-msgid "Built-in"
-msgstr ""
-
-msgid "Merge into another category"
-msgstr ""
-
-msgid "Target category name (e.g. Webdesign)"
-msgstr ""
-
+#: prefs.js:87
 msgid "Add category"
 msgstr ""
 
-msgid " Failed to save custom categories:"
+#: prefs.js:99
+#, fuzzy
+msgid "Save Custom Categories"
+msgstr "Edit Categories Profile"
+
+#: prefs.js:153
+msgid "Category name (e.g. Fonts)"
 msgstr ""
 
+#: prefs.js:164
+msgid "Enabled"
+msgstr ""
+
+#: prefs.js:186
+msgid "Built-in"
+msgstr ""
+
+#: prefs.js:201
+msgid "Merge into another category"
+msgstr ""
+
+#: prefs.js:208
+msgid "Target category name (e.g. Webdesign)"
+msgstr ""
+
+#: prefs.js:233
+msgid "Custom order"
+msgstr ""
+
+#: prefs.js:252
+msgid "Lower numbers appear first"
+msgstr ""
+
+#: prefs.js:317
+msgid "Default categories"
+msgstr ""
+
+#: prefs.js:359
 #, fuzzy
-#| msgid "Edit Categories Profile"
+msgid "Failed to save custom categories: "
+msgstr "Edit Categories Profile"
+
+#: prefs.js:371
+#, fuzzy
 msgid "Custom Categories Saved"
 msgstr "Edit Categories Profile"
 
+#: prefs.js:376
 msgid "OK"
 msgstr ""
 
+#: prefs.js:402
 msgid ""
 "Your custom category settings have been \n"
 "saved and applied to the app grid."
 msgstr ""
 
-msgid "Duplicate category name: "
-msgstr ""
-
-msgid "Enter a target category to merge \""
-msgstr ""
-
-msgid "\" into, or uncheck \"Merge into another category\"."
-msgstr ""
-
-msgid "Default categories"
-msgstr ""
-
-msgid "Open the custom category editor"
-msgstr ""
-
-msgid "Custom order"
-msgstr ""
-
-msgid "Lower numbers appear first"
-msgstr ""
-
+#: prefs.js:444
 msgid "Category name cannot contain \"::\": "
 msgstr ""
 
+#: prefs.js:452
+msgid "Duplicate category name: "
+msgstr ""
+
+#: prefs.js:466
+msgid "Enter a target category to merge \""
+msgstr ""
+
+#: prefs.js:466
+msgid "\" into, or uncheck \"Merge into another category\"."
+msgstr ""
+
+#: prefs.js:473
 msgid "Merge target cannot contain \"::\": "
 msgstr ""
+
+#: prefs.ui:7 prefs.ui:12
+msgid "App Grid"
+msgstr "Grade de aplicativos"
+
+#: prefs.ui:16
+msgid "App Sorting"
+msgstr "Ordem dos aplicativos"
+
+#: prefs.ui:20 prefs.ui:35
+msgid "Most Used"
+msgstr "Mais usados"
+
+#: prefs.ui:21 prefs.ui:36
+msgid "Alphabetical"
+msgstr "Alfabética"
+
+#: prefs.ui:30
+msgid "Favorites Sorting"
+msgstr "Ordem dos favoritos"
+
+#: prefs.ui:34
+msgid "As in Dash"
+msgstr "Como no Dash"
+
+#: prefs.ui:50
+msgid "Show Favorites Section"
+msgstr "Exibir seção de favoritos"
+
+#: prefs.ui:56
+msgid "Show favorites in app grid"
+msgstr ""
+
+#: prefs.ui:57
+msgid ""
+"When enabled, applications pinned to favorites will appear in the apps grid"
+msgstr ""
+
+#: prefs.ui:63
+msgid "Group by Category"
+msgstr ""
+
+#: prefs.ui:71
+msgid "Category Navigation"
+msgstr ""
+
+#: prefs.ui:75
+msgid "Always Show Category Navigation"
+msgstr ""
+
+#: prefs.ui:76
+msgid ""
+"Keep the left category list expanded at all times, instead of only showing "
+"it when you hover over it"
+msgstr ""
+
+#: prefs.ui:86
+msgid "Smooth Scrolling"
+msgstr "Rolagem suave"
+
+#: prefs.ui:92
+msgid "Show Workspaces Bar"
+msgstr ""
+
+#: prefs.ui:93
+msgid "Show workspace thumbnails at the top of the Overview"
+msgstr ""
+
+#: prefs.ui:99
+msgid "Clip Long App Names"
+msgstr ""
+
+#: prefs.ui:100
+msgid ""
+"Show long app names on a single clipped line instead of wrapping to show the "
+"full name"
+msgstr ""
+
+#: prefs.ui:108
+msgid "Customization"
+msgstr "Personalização"
+
+#: prefs.ui:112
+msgid "Columns"
+msgstr "Colunas"
+
+#: prefs.ui:125
+msgid "Icon Size"
+msgstr "Tamanho dos ícones"
+
+#: prefs.ui:138
+msgid "Icon Spacing"
+msgstr "Espaçamento dos ícones"
+
+#: prefs.ui:151
+msgid "Category Label Size"
+msgstr ""
+
+#: prefs.ui:152
+msgid "Adjust the font size shown in the category navigation."
+msgstr ""
+
+#: prefs.ui:169 prefs.ui:174
+#, fuzzy
+msgid "Custom Categories"
+msgstr "Edit Categories Profile"
+
+#: prefs.ui:175
+msgid ""
+"Add a custom category, choose whether it is enabled, and optionally merge it "
+"into an existing category (e.g. merge \"Fonts\" into \"Development\"). You "
+"can also set a custom sort order for any category, built-in or custom — "
+"lower numbers appear first."
+msgstr ""
+
+#~ msgid "Preferences"
+#~ msgstr "Preferências"
