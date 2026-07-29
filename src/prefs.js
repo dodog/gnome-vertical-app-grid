@@ -20,7 +20,13 @@ export default class EssentialTweaksPreferences extends ExtensionPreferences {
 
         // Load the UI file
         builder.add_from_file(`${this.path}/prefs.ui`);
-        window.add(builder.get_object('preferences-page'));
+
+        // Two tabs: general app-grid settings, and the custom categories editor 
+        const appGridPage = builder.get_object('app-grid-page');
+        const customCategoriesPage = builder.get_object('custom-categories-page');
+
+        window.add(appGridPage);
+        window.add(customCategoriesPage);
 
         // Bind the UI to the settings
         const properties = [
@@ -32,7 +38,9 @@ export default class EssentialTweaksPreferences extends ExtensionPreferences {
             ['icon-size', 'value'],
             ['icon-spacing', 'value'],
             ['category-font-size', 'value'],
-            ['show-workspaces', 'active']
+            ['show-workspaces', 'active'],
+            ['always-show-category-nav', 'active'],
+            ['clip-app-labels', 'active']
         ];
 
         properties.forEach(([key, property]) => {
@@ -42,69 +50,65 @@ export default class EssentialTweaksPreferences extends ExtensionPreferences {
         this._bindComboRow(builder, settings, 'app-sorting', ['usage', 'alphabetical']);
         this._bindComboRow(builder, settings, 'favorites-sorting', ['dash', 'usage', 'alphabetical']);
 
-        const editCategoriesBtn = builder.get_object('edit-custom-categories-btn');
-
-        // Open the custom categories editor only via the button.
-        let dialogOpen = false;
-        const openCustomCategoriesEditor = () => {
-            if (dialogOpen) {
-                return;
-            }
-            dialogOpen = true;
-            this._showCustomCategoriesEditor(window, settings, () => {
-                dialogOpen = false;
-            });
-        };
-
-        if (editCategoriesBtn) {
-            editCategoriesBtn.connect('clicked', openCustomCategoriesEditor);
-        }
+        // Populate the "Custom Categories" tab with the editor UI.
+        this._buildCustomCategoriesTab(builder, window, settings);
     }
 
-    // Show a dialog for editing custom categories, including merge targets and custom sort order.
-    _showCustomCategoriesEditor(window, settings, onClosed) {
-        const dialog = new Gtk.Dialog({
-            transient_for: window,
-            modal: true,
-            title: _('Edit Custom Categories'),
-            default_width: 640,
-            default_height: 520,
-            use_header_bar: true
-        });
+    // Build the custom categories editor directly into the
+    // "custom-categories-group" placeholder on the Custom Categories tab
+    _buildCustomCategoriesTab(builder, window, settings) {
+        const group = builder.get_object('custom-categories-group');
+        if (!group) {
+            return;
+        }
 
-        dialog.add_button(_('Cancel'), Gtk.ResponseType.CANCEL);
-        dialog.add_button(_('Save'), Gtk.ResponseType.OK);
-
-        const contentArea = dialog.get_content_area();
         const outerBox = new Gtk.Box({
             orientation: Gtk.Orientation.VERTICAL,
             spacing: 10,
-            margin_top: 12,
-            margin_bottom: 12,
-            margin_start: 12,
-            margin_end: 12
+            margin_top: 6,
+            margin_bottom: 6
         });
-        contentArea.append(outerBox);
 
-        const hintLabel = new Gtk.Label({
+        // Add/Save row goes at the top under the group's intro text
+        const buttonRow = new Gtk.Box({
+            orientation: Gtk.Orientation.HORIZONTAL,
+            spacing: 8
+        });
+        outerBox.append(buttonRow);
+
+        const addCategoryBtn = new Gtk.Button({
+            label: _('Add category'),
+            icon_name: 'list-add-symbolic',
+            halign: Gtk.Align.START
+        });
+        buttonRow.append(addCategoryBtn);
+
+        const buttonRowSpacer = new Gtk.Box({
+            hexpand: true
+        });
+        buttonRow.append(buttonRowSpacer);
+
+        const saveBtn = new Gtk.Button({
+            label: _('Save Custom Categories'),
+            halign: Gtk.Align.END
+        });
+        saveBtn.add_css_class('suggested-action');
+        buttonRow.append(saveBtn);
+
+        const errorLabel = new Gtk.Label({
             xalign: 0,
             wrap: true,
-            label: _('Add a custom category, choose whether it is enabled, and optionally merge it into an existing category name (e.g. merge "Fonts" into "Development"). \nYou can also set a custom sort order for any category, built-in or custom — lower numbers appear first.')
+            visible: false
         });
-        outerBox.append(hintLabel);
+        errorLabel.add_css_class('error');
+        outerBox.append(errorLabel);
 
-        const scroller = new Gtk.ScrolledWindow({
-            vexpand: true,
-            hexpand: true,
-            min_content_height: 320
-        });
-        outerBox.append(scroller);
 
         const listBox = new Gtk.ListBox({
             selection_mode: Gtk.SelectionMode.NONE
         });
         listBox.add_css_class('boxed-list');
-        scroller.set_child(listBox);
+        outerBox.append(listBox);
 
         // Each row's live widgets, so we can read their current values on Save.
         const rows = [];
@@ -311,79 +315,36 @@ export default class EssentialTweaksPreferences extends ExtensionPreferences {
             addRow(category.name, category.enabled, category.merge, category.isDefault, false, category.order);
         }
 
-        const addCategoryBtn = new Gtk.Button({
-            label: _('Add category'),
-            icon_name: 'list-add-symbolic',
-            halign: Gtk.Align.START
-        });
-        outerBox.append(addCategoryBtn);
+        // Scroll to the top
         addCategoryBtn.connect('clicked', () => {
             const rowEntry = addRow('', true, false, false, true);
-            const vadjustment = scroller.get_vadjustment();
-            if (vadjustment) {
-                vadjustment.set_value(0);
-            }
             rowEntry.nameEntry.grab_focus();
         });
 
-        const errorLabel = new Gtk.Label({
-            xalign: 0,
-            wrap: true,
-            visible: false
-        });
-        errorLabel.add_css_class('error');
-        outerBox.append(errorLabel);
+        saveBtn.connect('clicked', () => {
+            const {
+                categories,
+                errorMessage
+            } = this._collectCategories(rows);
 
-        // Resets the "is the editor open" flag (via onClosed) at the exact
-        // moment we decide to close the dialog, rather than waiting for the
-        // 'destroy' signal to fire on its own. 
-        const closeDialog = () => {
-            if (onClosed) {
-                onClosed();
+            if (errorMessage) {
+                errorLabel.set_text(errorMessage);
+                errorLabel.visible = true;
+                return;
             }
-            dialog.destroy();
-        };
 
-        dialog.connect('response', (_dialog, responseId) => {
-            if (responseId === Gtk.ResponseType.OK) {
-                const {
-                    categories,
-                    errorMessage
-                } = this._collectCategories(rows);
+            errorLabel.visible = false;
 
-                if (errorMessage) {
-                    errorLabel.set_text(errorMessage);
-                    errorLabel.visible = true;
-                    dialog.present();
-                    return;
-                }
-
-                try {
-                    settings.set_string('custom-categories', JSON.stringify(categories));
-                    closeDialog();
-                    this._showSavedNotice(window);
-                } catch (e) {
-                    errorLabel.set_text(_('Failed to save custom categories: ') + e.message);
-                    errorLabel.visible = true;
-                    dialog.present();
-                }
-            } else {
-                closeDialog();
+            try {
+                settings.set_string('custom-categories', JSON.stringify(categories));
+                this._showSavedNotice(window);
+            } catch (e) {
+                errorLabel.set_text(_('Failed to save custom categories: ') + e.message);
+                errorLabel.visible = true;
             }
         });
 
-        // Kept as a safety net for any closure path that doesn't go through
-        // the response handler above (e.g. a window-manager-level close).
-        // onClosed() is safe to call more than once - it only resets a
-        // boolean flag - so this can't double-trigger anything by also
-        // firing after closeDialog() already called it.
-        dialog.connect('destroy', () => {
-            if (onClosed) {
-                onClosed();
-            }
-        });
-
-        dialog.present();
+        group.add(outerBox);
     }
 
     _showSavedNotice(window) {
