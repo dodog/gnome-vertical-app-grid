@@ -371,13 +371,10 @@ export default class VerticalAppGridExtension extends Extension {
         this._stopOverviewReadyPoll();
 
         // Restore workspace visibility when disabling - forceShow=true so
-        // this actually restores them regardless of the current
-        // show-workspaces setting.
-        try {
-            if (this._updateWorkspacesVisibility) {
-                this._updateWorkspacesVisibility(true);
-            }
-        } catch (e) {}
+        // this actually restores them regardless of the current show-workspaces setting.
+        if (this._updateWorkspacesVisibility) {
+            this._updateWorkspacesVisibility(true);
+        }
 
         // Reset so a subsequent enable() (GNOME Shell reuses this same
         // Extension instance across disable()/enable() cycles, it doesn't
