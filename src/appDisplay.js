@@ -117,9 +117,13 @@ export const VerticalAppDisplay = GObject.registerClass(
                 style: `margin-right: 8px; padding: 8px 0 8px 8px; width: ${NAV_WIDTH}px; overflow: hidden;`
             });
 
-            // Labels start hidden; shown on hover, see _setNavCollapsed().
-            // Width never changes, only label opacity.
-            this._navCollapsed = true;
+            // Labels start hidden and only shown on hover by default, see
+            // _setNavCollapsed() - unless the user has enabled "always show
+            // category navigation", in which case start already expanded
+            // to avoid an initial collapsed-then-expand flash on first
+            // display.
+            this._navAlwaysVisible = this._settings.get_boolean('always-show-category-nav');
+            this._navCollapsed = !this._navAlwaysVisible;
 
             this._mainBox = new St.BoxLayout({
                 vertical: false,
@@ -172,7 +176,15 @@ export const VerticalAppDisplay = GObject.registerClass(
             this._overview.connectObject('hidden', () => {
                 this._scrollView.scrollTo(0, false);
                 this._cancelDrag();
-                this._setNavCollapsed(true, false);
+                // Only force the nav back to collapsed if the user hasn't
+                // asked for it to always stay expanded - otherwise this ran
+                // unconditionally on every close, fighting the setting: it
+                // set _navCollapsed = true regardless, and since hover is
+                // intentionally a no-op while always-visible is on, nothing
+                // ever re-expanded it on the next open.
+                if (!this._navAlwaysVisible) {
+                    this._setNavCollapsed(true, false);
+                }
             }, this);
 
             // Expand the whole nav (labels + width) while the pointer is
@@ -181,10 +193,14 @@ export const VerticalAppDisplay = GObject.registerClass(
             // fires once for the whole container regardless of whether the
             // pointer lands on padding or on a button - independent from
             // each button's own enter/leave used for icon opacity below.
+            // Skipped entirely when "always show category navigation" is on,
+            // since the nav should just stay expanded regardless of hover.
             this._navBox.connect('enter-event', () => {
+                if (this._navAlwaysVisible) return;
                 this._setNavCollapsed(false);
             });
             this._navBox.connect('leave-event', () => {
+                if (this._navAlwaysVisible) return;
                 this._setNavCollapsed(true);
             });
 
@@ -198,6 +214,7 @@ export const VerticalAppDisplay = GObject.registerClass(
                     case 'show-favorites-in-app-grid':
                     case 'category-font-size':
                     case 'custom-categories':
+                    case 'clip-app-labels':
                         return this._redisplay();
 
                     case 'icon-spacing':
@@ -205,6 +222,9 @@ export const VerticalAppDisplay = GObject.registerClass(
 
                     case 'icon-size':
                         return this._updateIconSize();
+
+                    case 'always-show-category-nav':
+                        return this._updateNavAlwaysVisible();
                 }
             }, this);
 
@@ -249,6 +269,15 @@ export const VerticalAppDisplay = GObject.registerClass(
             row.add_child(line);
 
             return row;
+        }
+
+        // Applies (or reverses) the "always show category navigation"
+        // setting immediately, without requiring the overview to be
+        // reopened. Reuses _setNavCollapsed() so it goes through the same
+        // animation/teardown-guard logic as ordinary hover-driven changes.
+        _updateNavAlwaysVisible() {
+            this._navAlwaysVisible = this._settings.get_boolean('always-show-category-nav');
+            this._setNavCollapsed(!this._navAlwaysVisible);
         }
 
         // Computes where in destView's child list a drop at stage
@@ -1518,15 +1547,22 @@ export const VerticalAppDisplay = GObject.registerClass(
         }
 
         _attachDragHandlers(appIcon) {
-            this._showFullAppLabel(appIcon);
-
-            // AppIcon's own built-in hover handling reverts the label back to
-            // a single ellipsized line once the pointer leaves. Re-apply our
-            // override every time hover changes so it always wins, regardless
-            // of what the built-in handler just did.
-            appIcon.connect('notify::hover', () => {
+            // Respect the "clip long app names" setting: when it's enabled,
+            // leave AppDisplay.AppIcon's stock single-line ellipsized label
+            // behavior (full name only on hover, via its own overlay) alone
+            // instead of forcing the full wrapped name below. Default is
+            // false, matching the previous always-full-name behavior.
+            if (!this._settings.get_boolean('clip-app-labels')) {
                 this._showFullAppLabel(appIcon);
-            });
+
+                // AppIcon's own built-in hover handling reverts the label back
+                // to a single ellipsized line once the pointer leaves.
+                // Re-apply our override every time hover changes so it always
+                // wins, regardless of what the built-in handler just did.
+                appIcon.connect('notify::hover', () => {
+                    this._showFullAppLabel(appIcon);
+                });
+            }
 
             appIcon.reactive = true;
             appIcon.connect('button-press-event', (actor, event) => {
