@@ -6,6 +6,13 @@ Custom categories are saved under 'custom-categories' and survive updates.
 import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
 
+// Marks a string for translation extraction (xgettext) without translating
+// it here. These are internal category IDs (also matched against .desktop
+// Categories= keys), so they must stay untranslated at this point - the
+// actual translation happens later, at display time, via _(category.name)
+// in appDisplay.js and prefs.js.
+const N_ = s => s;
+
 // Settings helpers and category utilities used by the extension and prefs.
 // Safe/settings helper functions used by the extension and preferences UI.
 export function getSettingsString(settings, key, fallback = '') {
@@ -85,68 +92,73 @@ function _getSettings() {
 }
 
 // Built-in default categories shown when no custom categories are set.
+// Names are wrapped in N_() purely so xgettext extracts them into the
+// .pot file; N_() is an identity function, so DEFAULT_CATEGORIES[i].name
+// is still the plain, untranslated string (e.g. 'Development') used
+// internally for matching/storage/config. Translation happens later, at
+// display time, wherever _(category.name) is called.
 export const DEFAULT_CATEGORIES = [{
-        name: 'Development',
+        name: N_('Development'),
         enabled: true,
         merge: false
     },
     {
-        name: 'Office',
+        name: N_('Office'),
         enabled: true,
         merge: false
     },
     {
-        name: 'Network',
+        name: N_('Network'),
         enabled: true,
         merge: false
     },
     {
-        name: 'AudioVideo',
+        name: N_('AudioVideo'),
         enabled: false,
         merge: false
     },
     {
-        name: 'Audio',
+        name: N_('Audio'),
         enabled: true,
         merge: false
     },
     {
-        name: 'Video',
+        name: N_('Video'),
         enabled: true,
         merge: false
     },
     {
-        name: 'Graphics',
+        name: N_('Graphics'),
         enabled: true,
         merge: false
     },
     {
-        name: 'Education',
+        name: N_('Education'),
         enabled: true,
         merge: false
     },
     {
-        name: 'Game',
+        name: N_('Game'),
         enabled: true,
         merge: false
     },
     {
-        name: 'Utility',
+        name: N_('Utility'),
         enabled: true,
         merge: false
     },
     {
-        name: 'Accessories',
+        name: N_('Accessories'),
         enabled: true,
         merge: false
     },
     {
-        name: 'System',
+        name: N_('System'),
         enabled: true,
         merge: false
     },
     {
-        name: 'Settings',
+        name: N_('Settings'),
         enabled: true,
         merge: false
     }
