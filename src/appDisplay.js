@@ -327,13 +327,11 @@ export const VerticalAppDisplay = GObject.registerClass(
 
         _getInstalledIdsSet() {
             const ids = new Set();
-            try {
-                this._appSystem.get_installed().forEach(appInfo => {
-                    try {
-                        ids.add(appInfo.get_id());
-                    } catch (e) {}
-                });
-            } catch (e) {}
+            this._appSystem.get_installed().forEach(appInfo => {
+                try {
+                    ids.add(appInfo.get_id());
+                } catch (e) {}
+            });
             return ids;
         }
 
@@ -391,9 +389,7 @@ export const VerticalAppDisplay = GObject.registerClass(
                         const appIcon = new AppDisplay.AppIcon(app, {
                             isDraggable: false
                         });
-                        try {
-                            appIcon._appId = app.get_id();
-                        } catch (e) {}
+                        appIcon._appId = app.get_id();
                         this._attachDragHandlers(appIcon);
                         appIcon.icon.setIconSize(iconSize);
                         favView.add_child(appIcon);
@@ -424,9 +420,7 @@ export const VerticalAppDisplay = GObject.registerClass(
                         const appIcon = new AppDisplay.AppIcon(app, {
                             isDraggable: false
                         });
-                        try {
-                            appIcon._appId = app.get_id();
-                        } catch (e) {}
+                        appIcon._appId = app.get_id();
                         // Attach centralized drag handlers
                         this._attachDragHandlers(appIcon);
                         appIcon.icon.setIconSize(iconSize);
@@ -455,9 +449,7 @@ export const VerticalAppDisplay = GObject.registerClass(
                         const appIcon = new AppDisplay.AppIcon(app, {
                             isDraggable: false
                         });
-                        try {
-                            appIcon._appId = app.get_id();
-                        } catch (e) {}
+                        appIcon._appId = app.get_id();
                         this._attachDragHandlers(appIcon);
                         appIcon.icon.setIconSize(iconSize);
                         view.add_child(appIcon);
@@ -544,9 +536,7 @@ export const VerticalAppDisplay = GObject.registerClass(
                         isDraggable: false
                     });
                     appIcon.icon.setIconSize(iconSize);
-                    try {
-                        appIcon._appId = app.get_id();
-                    } catch (e) {}
+                    appIcon._appId = app.get_id();
                     this._attachDragHandlers(appIcon);
                     this._favoritesView.add_child(appIcon);
                     this._appIcons.push(appIcon);
@@ -560,9 +550,7 @@ export const VerticalAppDisplay = GObject.registerClass(
                         isDraggable: false
                     });
                     appIcon.icon.setIconSize(iconSize);
-                    try {
-                        appIcon._appId = app.get_id();
-                    } catch (e) {}
+                    appIcon._appId = app.get_id();
                     this._attachDragHandlers(appIcon);
                     this._mainView.add_child(appIcon);
                     this._appIcons.push(appIcon);
@@ -1006,24 +994,22 @@ export const VerticalAppDisplay = GObject.registerClass(
             }
 
             // Apply user-defined ordering (from app-category-overrides with index)
-            try {
-                const orderMap = getCategoryOrderMap();
-                for (const [cat, order] of orderMap.entries()) {
-                    if (!appsByCategory[cat]) continue;
-                    const present = new Set(appsByCategory[cat]);
-                    const ordered = [];
-                    for (const id of order) {
-                        if (present.has(id)) {
-                            ordered.push(id);
-                            present.delete(id);
-                        }
+            const orderMap = getCategoryOrderMap();
+            for (const [cat, order] of orderMap.entries()) {
+                if (!appsByCategory[cat]) continue;
+                const present = new Set(appsByCategory[cat]);
+                const ordered = [];
+                for (const id of order) {
+                    if (present.has(id)) {
+                        ordered.push(id);
+                        present.delete(id);
                     }
-                    // append remaining apps
-                    for (const id of appsByCategory[cat])
-                        if (present.has(id)) ordered.push(id);
-                    appsByCategory[cat] = ordered;
                 }
-            } catch (e) {}
+                // append remaining apps
+                for (const id of appsByCategory[cat])
+                    if (present.has(id)) ordered.push(id);
+                appsByCategory[cat] = ordered;
+            }
 
             // Sort favorites
             if (appsByCategory['_favorites'].length > 0) {
@@ -1164,11 +1150,7 @@ export const VerticalAppDisplay = GObject.registerClass(
                         };
                     }
                 }
-                try {
-                    target = target.get_parent();
-                } catch (e) {
-                    target = null;
-                }
+                target = target.get_parent();
             }
             return {
                 view: null,
