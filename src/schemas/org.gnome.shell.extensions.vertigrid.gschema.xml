@@ -56,5 +56,17 @@
       <summary>Custom categories as a JSON array of objects</summary>
     </key>
 
+    <key name="always-show-category-nav" type="b">
+      <default>false</default>
+      <summary>Always show category navigation</summary>
+      <description>Keep the left category navigation expanded at all times instead of only on hover.</description>
+    </key>
+
+    <key name="clip-app-labels" type="b">
+      <default>false</default>
+      <summary>Clip long app names</summary>
+      <description>Clip long application names to a single line instead of showing them in full.</description>
+    </key>
+   
   </schema>
 </schemalist>
