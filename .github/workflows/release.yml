@@ -1,7 +1,6 @@
 name: Package GNOME extension
 
-# Builds the extension zip and attaches it to the GitHub Release whenever
-# a release is published.
+# Builds the extension zip and attaches it to the GitHub Release whenever a release is published.
 on:
   release:
     types: [published]
