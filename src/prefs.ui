@@ -3,9 +3,9 @@
   <requires lib="gtk" version="4.0"/>
   <requires lib="adwaita" version="1.0"/>
 
-  <object class="AdwPreferencesPage" id="preferences-page">
-    <property name="title" translatable="yes">Preferences</property>
-    <property name="icon-name">org.gnome.Settings-system-symbolic</property>
+  <object class="AdwPreferencesPage" id="app-grid-page">
+    <property name="title" translatable="yes">App Grid</property>
+    <property name="icon-name">view-grid-symbolic</property>
 
     <child>
       <object class="AdwPreferencesGroup">
@@ -63,21 +63,17 @@
             <property name="title" translatable="yes">Group by Category</property>
           </object>
         </child>
+      </object>
+    </child>
+
+    <child>
+      <object class="AdwPreferencesGroup">
+        <property name="title" translatable="yes">Category Navigation</property>
 
         <child>
-          <object class="AdwActionRow" id="edit-custom-categories">
-            <property name="title" translatable="yes">Edit Custom Categories</property>
-            <property name="subtitle" translatable="yes">Open the custom category editor</property>
-            <property name="activatable-widget">edit-custom-categories-btn</property>
-            <child>
-              <object class="GtkButton" id="edit-custom-categories-btn">
-                <property name="valign">center</property>
-                <property name="icon-name">document-edit-symbolic</property>
-                <style>
-                  <class name="flat"/>
-                </style>
-              </object>
-            </child>
+          <object class="AdwSwitchRow" id="always-show-category-nav">
+            <property name="title" translatable="yes">Always Show Category Navigation</property>
+            <property name="subtitle" translatable="yes">Keep the left category list expanded at all times, instead of only showing it when you hover over it</property>
           </object>
         </child>
       </object>
@@ -95,6 +91,13 @@
           <object class="AdwSwitchRow" id="show-workspaces">
             <property name="title" translatable="yes">Show Workspaces Bar</property>
             <property name="subtitle" translatable="yes">Show workspace thumbnails at the top of the Overview</property>
+          </object>
+        </child>
+
+        <child>
+          <object class="AdwSwitchRow" id="clip-app-labels">
+            <property name="title" translatable="yes">Clip Long App Names</property>
+            <property name="subtitle" translatable="yes">Show long app names on a single clipped line instead of wrapping to show the full name</property>
           </object>
         </child>
       </object>
@@ -157,6 +160,19 @@
           </object>
         </child>
 
+      </object>
+    </child>
+
+  </object>
+
+  <object class="AdwPreferencesPage" id="custom-categories-page">
+    <property name="title" translatable="yes">Custom Categories</property>
+    <property name="icon-name">view-list-symbolic</property>
+
+    <child>
+      <object class="AdwPreferencesGroup" id="custom-categories-group">
+        <property name="title" translatable="yes">Custom Categories</property>
+        <property name="description" translatable="yes">Add a custom category, choose whether it is enabled, and optionally merge it into an existing category (e.g. merge &quot;Fonts&quot; into &quot;Development&quot;). You can also set a custom sort order for any category, built-in or custom — lower numbers appear first.</property>
       </object>
     </child>
 
