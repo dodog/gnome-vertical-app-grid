@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: VertiGrid 1.0\n"
 "Report-Msgid-Bugs-To: https://github.com/dodog/vertigrid/issues\n"
-"POT-Creation-Date: 2026-07-29 21:01+0200\n"
+"POT-Creation-Date: 2026-08-01 13:08+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -12,134 +12,143 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.9\n"
 
-#: extension.js:314
+#: extension.js:289
 msgid "Remove from Favorites"
 msgstr "Aus Favoriten entfernen"
 
-#: extension.js:315
+#: extension.js:290
 msgid "Add to Favorites"
 msgstr "Zu Favoriten hinzufügen"
 
-#: categories.js:101
+#: categories.js:48
 msgid "Development"
 msgstr "Entwicklung"
 
-#: categories.js:106
+#: categories.js:53
 msgid "Office"
 msgstr "Büro"
 
-#: categories.js:111
+#: categories.js:58
 msgid "Network"
 msgstr "Netzwerk"
 
-#: categories.js:116
+#: categories.js:63
 msgid "AudioVideo"
 msgstr "Audio & Video"
 
-#: categories.js:121
+#: categories.js:68
 msgid "Audio"
 msgstr "Audio"
 
-#: categories.js:126
+#: categories.js:73
 msgid "Video"
 msgstr "Video"
 
-#: categories.js:131
+#: categories.js:78
 msgid "Graphics"
 msgstr "Grafik"
 
-#: categories.js:136
+#: categories.js:83
 msgid "Education"
 msgstr "Bildung"
 
-#: categories.js:141
+#: categories.js:88
 msgid "Game"
 msgstr "Spiel"
 
-#: categories.js:146
+#: categories.js:93
 msgid "Utility"
 msgstr "Dienstprogramm"
 
-#: categories.js:151
+#: categories.js:98
 msgid "Accessories"
 msgstr "Zubehör"
 
-#: categories.js:156
+#: categories.js:103
 msgid "System"
 msgstr "System"
 
-#: categories.js:161
+#: categories.js:108
 msgid "Settings"
 msgstr "Einstellungen"
 
-#: appDisplay.js:89 appDisplay.js:375 appDisplay.js:605
+#: appDisplay.js:96 appDisplay.js:381 appDisplay.js:599
 msgid "Favorites"
 msgstr "Favoriten"
 
-#: appDisplay.js:96
+#: appDisplay.js:103
 msgid "All Apps"
 msgstr "Alle Anwendungen"
 
-#: appDisplay.js:440 appDisplay.js:619
+#: appDisplay.js:442 appDisplay.js:613
 msgid "Other"
 msgstr "Sonstige"
 
-#: prefs.js:87
+#: prefs.js:80
 msgid "Add category"
 msgstr "Kategorie hinzufügen"
 
-#: prefs.js:99
+#: prefs.js:92
 #, fuzzy
 msgid "Save Custom Categories"
 msgstr "Benutzerdefinierte Kategorien speichern"
 
-#: prefs.js:153
+#: prefs.js:140
 msgid "Category name (e.g. Fonts)"
 msgstr "Kategoriename (z.B. Schriftarten)"
 
-#: prefs.js:164
+#: prefs.js:151
 msgid "Enabled"
 msgstr "Aktiviert"
 
-#: prefs.js:186
+#: prefs.js:173
 msgid "Built-in"
 msgstr "Integriert"
 
-#: prefs.js:201
+#: prefs.js:188
 msgid "Merge into another category"
 msgstr "In eine andere Kategorie zusammenführen"
 
-#: prefs.js:208
+#: prefs.js:195
 msgid "Target category name (e.g. Webdesign)"
 msgstr "Zielkategoriename (z.B. Webdesign)"
 
-#: prefs.js:233
+#: prefs.js:220
 msgid "Custom order"
 msgstr "Benutzerdefinierte Reihenfolge"
 
-#: prefs.js:252
+#: prefs.js:239
 msgid "Lower numbers appear first"
 msgstr "Niedrigere Zahlen erscheinen zuerst"
 
-#: prefs.js:317
+#: prefs.js:272 prefs.js:290
+#, fuzzy
+msgid "Default icon"
+msgstr "Standardkategorien"
+
+#: prefs.js:281
+msgid "Choose Icon…"
+msgstr ""
+
+#: prefs.js:349
 msgid "Default categories"
 msgstr "Standardkategorien"
 
-#: prefs.js:359
+#: prefs.js:387
 #, fuzzy
 msgid "Failed to save custom categories: "
 msgstr "Fehler beim Speichern der benutzerdefinierten Kategorien: "
 
-#: prefs.js:371
+#: prefs.js:399
 #, fuzzy
 msgid "Custom Categories Saved"
 msgstr "Benutzerdefinierte Kategorien gespeichert"
 
-#: prefs.js:376
+#: prefs.js:404
 msgid "OK"
 msgstr "OK"
 
-#: prefs.js:402
+#: prefs.js:430
 msgid ""
 "Your custom category settings have been \n"
 "saved and applied to the app grid."
@@ -147,23 +156,45 @@ msgstr ""
 "Ihre benutzerdefinierten Kategorieeinstellungen wurden \n"
 "gespeichert und auf das App-Raster angewendet."
 
-#: prefs.js:444
+#: prefs.js:449
+msgid "Choose an Icon"
+msgstr ""
+
+#: prefs.js:455
+msgid "Cancel"
+msgstr ""
+
+#: prefs.js:456
+msgid "Use Default Icon"
+msgstr ""
+
+#: prefs.js:461
+msgid "Search symbolic icons (e.g. mail, folder, web)…"
+msgstr ""
+
+#: prefs.js:489
+msgid "Start typing to search your system’s symbolic icons."
+msgstr ""
+
+#: prefs.js:604
 msgid "Category name cannot contain \"::\": "
 msgstr "Kategoriename darf nicht \"::\" enthalten: "
 
-#: prefs.js:452
+#: prefs.js:612
 msgid "Duplicate category name: "
 msgstr "Doppelter Kategoriename: "
 
-#: prefs.js:466
+#: prefs.js:626
 msgid "Enter a target category to merge \""
 msgstr "Geben Sie eine Zielkategorie ein, um \""
 
-#: prefs.js:466
+#: prefs.js:626
 msgid "\" into, or uncheck \"Merge into another category\"."
-msgstr "\" zusammenzuführen, oder deaktivieren Sie \"In eine andere Kategorie zusammenführen\"."
+msgstr ""
+"\" zusammenzuführen, oder deaktivieren Sie \"In eine andere Kategorie "
+"zusammenführen\"."
 
-#: prefs.js:473
+#: prefs.js:633
 msgid "Merge target cannot contain \"::\": "
 msgstr "Ziel für Zusammenführung darf nicht \"::\" enthalten: "
 
@@ -203,7 +234,8 @@ msgstr "Favoriten im App-Raster anzeigen"
 msgid ""
 "When enabled, applications pinned to favorites will appear in the apps grid"
 msgstr ""
-"Wenn aktiviert, werden die an die Favoriten angehefteten Anwendungen im App-Raster angezeigt"
+"Wenn aktiviert, werden die an die Favoriten angehefteten Anwendungen im App-"
+"Raster angezeigt"
 
 #: prefs.ui:63
 msgid "Group by Category"
@@ -222,7 +254,8 @@ msgid ""
 "Keep the left category list expanded at all times, instead of only showing "
 "it when you hover over it"
 msgstr ""
-"Die linke Kategorieliste immer aufgeklappt halten, anstatt sie nur beim Darüberfahren anzuzeigen"
+"Die linke Kategorieliste immer aufgeklappt halten, anstatt sie nur beim "
+"Darüberfahren anzuzeigen"
 
 #: prefs.ui:86
 msgid "Smooth Scrolling"
@@ -245,7 +278,8 @@ msgid ""
 "Show long app names on a single clipped line instead of wrapping to show the "
 "full name"
 msgstr ""
-"Lange Anwendungsnamen in einer einzigen abgeschnittenen Zeile anzeigen, anstatt sie umzubrechen, um den vollständigen Namen anzuzeigen"
+"Lange Anwendungsnamen in einer einzigen abgeschnittenen Zeile anzeigen, "
+"anstatt sie umzubrechen, um den vollständigen Namen anzuzeigen"
 
 #: prefs.ui:108
 msgid "Customization"
@@ -283,7 +317,12 @@ msgid ""
 "can also set a custom sort order for any category, built-in or custom — "
 "lower numbers appear first."
 msgstr ""
-"Fügen Sie eine benutzerdefinierte Kategorie hinzu, wählen Sie, ob sie aktiviert ist, und führen Sie sie optional mit einer vorhandenen Kategorie zusammen (z.B. \"Schriftarten\" in \"Entwicklung\" zusammenführen). Sie können auch eine benutzerdefinierte Sortierreihenfolge für jede Kategorie festlegen, ob integriert oder benutzerdefiniert — niedrigere Zahlen erscheinen zuerst."
+"Fügen Sie eine benutzerdefinierte Kategorie hinzu, wählen Sie, ob sie "
+"aktiviert ist, und führen Sie sie optional mit einer vorhandenen Kategorie "
+"zusammen (z.B. \"Schriftarten\" in \"Entwicklung\" zusammenführen). Sie "
+"können auch eine benutzerdefinierte Sortierreihenfolge für jede Kategorie "
+"festlegen, ob integriert oder benutzerdefiniert — niedrigere Zahlen "
+"erscheinen zuerst."
 
 #~ msgid "Preferences"
 #~ msgstr "Einstellungen"

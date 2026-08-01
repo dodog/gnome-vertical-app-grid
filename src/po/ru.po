@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: VertiGrid 1.0\n"
 "Report-Msgid-Bugs-To: https://github.com/dodog/vertigrid/issues\n"
-"POT-Creation-Date: 2026-07-29 21:01+0200\n"
+"POT-Creation-Date: 2026-08-01 13:08+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -12,156 +12,184 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.9\n"
 
-#: extension.js:314
+#: extension.js:289
 msgid "Remove from Favorites"
 msgstr "Удалить из «Избранного»"
 
-#: extension.js:315
+#: extension.js:290
 msgid "Add to Favorites"
 msgstr "Добавить в «Избранное»"
 
-#: categories.js:101
+#: categories.js:48
 msgid "Development"
 msgstr "Development"
 
-#: categories.js:106
+#: categories.js:53
 msgid "Office"
 msgstr "Office"
 
-#: categories.js:111
+#: categories.js:58
 msgid "Network"
 msgstr "Network"
 
-#: categories.js:116
+#: categories.js:63
 msgid "AudioVideo"
 msgstr "AudioVideo"
 
-#: categories.js:121
+#: categories.js:68
 msgid "Audio"
 msgstr "Audio"
 
-#: categories.js:126
+#: categories.js:73
 msgid "Video"
 msgstr "Video"
 
-#: categories.js:131
+#: categories.js:78
 msgid "Graphics"
 msgstr "Graphics"
 
-#: categories.js:136
+#: categories.js:83
 msgid "Education"
 msgstr "Education"
 
-#: categories.js:141
+#: categories.js:88
 msgid "Game"
 msgstr "Game"
 
-#: categories.js:146
+#: categories.js:93
 msgid "Utility"
 msgstr "Utility"
 
-#: categories.js:151
+#: categories.js:98
 msgid "Accessories"
 msgstr "Accessories"
 
-#: categories.js:156
+#: categories.js:103
 msgid "System"
 msgstr "System"
 
-#: categories.js:161
+#: categories.js:108
 msgid "Settings"
 msgstr "Settings"
 
-#: appDisplay.js:89 appDisplay.js:375 appDisplay.js:605
+#: appDisplay.js:96 appDisplay.js:381 appDisplay.js:599
 msgid "Favorites"
 msgstr "Избранное"
 
-#: appDisplay.js:96
+#: appDisplay.js:103
 msgid "All Apps"
 msgstr "Все приложения"
 
-#: appDisplay.js:440 appDisplay.js:619
+#: appDisplay.js:442 appDisplay.js:613
 msgid "Other"
 msgstr "Other"
 
-#: prefs.js:87
+#: prefs.js:80
 msgid "Add category"
 msgstr ""
 
-#: prefs.js:99
+#: prefs.js:92
 #, fuzzy
 msgid "Save Custom Categories"
 msgstr "Edit Categories Profile"
 
-#: prefs.js:153
+#: prefs.js:140
 msgid "Category name (e.g. Fonts)"
 msgstr ""
 
-#: prefs.js:164
+#: prefs.js:151
 msgid "Enabled"
 msgstr ""
 
-#: prefs.js:186
+#: prefs.js:173
 msgid "Built-in"
 msgstr ""
 
-#: prefs.js:201
+#: prefs.js:188
 msgid "Merge into another category"
 msgstr ""
 
-#: prefs.js:208
+#: prefs.js:195
 msgid "Target category name (e.g. Webdesign)"
 msgstr ""
 
-#: prefs.js:233
+#: prefs.js:220
 msgid "Custom order"
 msgstr ""
 
-#: prefs.js:252
+#: prefs.js:239
 msgid "Lower numbers appear first"
 msgstr ""
 
-#: prefs.js:317
+#: prefs.js:272 prefs.js:290
+msgid "Default icon"
+msgstr ""
+
+#: prefs.js:281
+msgid "Choose Icon…"
+msgstr ""
+
+#: prefs.js:349
 msgid "Default categories"
 msgstr ""
 
-#: prefs.js:359
+#: prefs.js:387
 #, fuzzy
 msgid "Failed to save custom categories: "
 msgstr "Edit Categories Profile"
 
-#: prefs.js:371
+#: prefs.js:399
 #, fuzzy
 msgid "Custom Categories Saved"
 msgstr "Edit Categories Profile"
 
-#: prefs.js:376
+#: prefs.js:404
 msgid "OK"
 msgstr ""
 
-#: prefs.js:402
+#: prefs.js:430
 msgid ""
 "Your custom category settings have been \n"
 "saved and applied to the app grid."
 msgstr ""
 
-#: prefs.js:444
+#: prefs.js:449
+msgid "Choose an Icon"
+msgstr ""
+
+#: prefs.js:455
+msgid "Cancel"
+msgstr ""
+
+#: prefs.js:456
+msgid "Use Default Icon"
+msgstr ""
+
+#: prefs.js:461
+msgid "Search symbolic icons (e.g. mail, folder, web)…"
+msgstr ""
+
+#: prefs.js:489
+msgid "Start typing to search your system’s symbolic icons."
+msgstr ""
+
+#: prefs.js:604
 msgid "Category name cannot contain \"::\": "
 msgstr ""
 
-#: prefs.js:452
+#: prefs.js:612
 msgid "Duplicate category name: "
 msgstr ""
 
-#: prefs.js:466
+#: prefs.js:626
 msgid "Enter a target category to merge \""
 msgstr ""
 
-#: prefs.js:466
+#: prefs.js:626
 msgid "\" into, or uncheck \"Merge into another category\"."
 msgstr ""
 
-#: prefs.js:473
+#: prefs.js:633
 msgid "Merge target cannot contain \"::\": "
 msgstr ""
 
