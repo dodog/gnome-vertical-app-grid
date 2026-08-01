@@ -12,7 +12,7 @@ import {
 } from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
 // Preferences UI for editing extension settings and custom categories.
-export default class EssentialTweaksPreferences extends ExtensionPreferences {
+export default class VertiGridPreferences extends ExtensionPreferences {
     // Construct the preferences UI and wire widgets to the extension settings.
     fillPreferencesWindow(window) {
         const settings = this.getSettings();
@@ -113,7 +113,7 @@ export default class EssentialTweaksPreferences extends ExtensionPreferences {
         // Each row's live widgets, so we can read their current values on Save.
         const rows = [];
 
-        const addRow = (name = '', enabled = true, merge = false, isDefault = false, insertAtTop = false, order = null) => {
+        const addRow = (name = '', enabled = true, merge = false, isDefault = false, insertAtTop = false, order = null, icon = null) => {
             const row = new Gtk.ListBoxRow({
                 activatable: false
             });
@@ -247,6 +247,50 @@ export default class EssentialTweaksPreferences extends ExtensionPreferences {
                 orderHint.sensitive = orderCheck.active;
             });
 
+            // Line 4: custom icon, shown for both built-in categories (to
+            // override an icon that might not exist in the user's icon
+            // theme) and custom ones (which otherwise start with a generic
+            // placeholder icon).
+            const iconLine = new Gtk.Box({
+                orientation: Gtk.Orientation.HORIZONTAL,
+                spacing: 8
+            });
+            rowBox.append(iconLine);
+
+            const iconState = {
+                value: icon || null
+            };
+
+            const iconPreview = new Gtk.Image({
+                icon_name: iconState.value || 'image-missing-symbolic',
+                pixel_size: 18,
+                valign: Gtk.Align.CENTER
+            });
+            iconLine.append(iconPreview);
+
+            const iconLabel = new Gtk.Label({
+                label: iconState.value || _('Default icon'),
+                hexpand: true,
+                xalign: 0,
+                valign: Gtk.Align.CENTER
+            });
+            iconLabel.add_css_class('dim-label');
+            iconLine.append(iconLabel);
+
+            const chooseIconBtn = new Gtk.Button({
+                label: _('Choose Icon\u2026'),
+                valign: Gtk.Align.CENTER
+            });
+            iconLine.append(chooseIconBtn);
+
+            chooseIconBtn.connect('clicked', () => {
+                this._openIconChooser(window, iconState.value, selected => {
+                    iconState.value = selected;
+                    iconPreview.set_from_icon_name(selected || 'image-missing-symbolic');
+                    iconLabel.set_text(selected || _('Default icon'));
+                });
+            });
+
             if (removeBtn) {
                 removeBtn.connect('clicked', () => {
                     const idx = rows.indexOf(rowEntry);
@@ -264,6 +308,7 @@ export default class EssentialTweaksPreferences extends ExtensionPreferences {
                 mergeEntry,
                 orderCheck,
                 orderSpin,
+                iconState,
                 isDefault,
                 canonicalName: name
             };
@@ -284,7 +329,7 @@ export default class EssentialTweaksPreferences extends ExtensionPreferences {
         const defaultCategories = existing.filter(c => c.isDefault);
 
         for (const category of customCategories) {
-            addRow(category.name, category.enabled, category.merge, category.isDefault, false, category.order);
+            addRow(category.name, category.enabled, category.merge, category.isDefault, false, category.order, category.icon);
         }
 
         const separatorRow = new Gtk.ListBoxRow({
@@ -312,7 +357,7 @@ export default class EssentialTweaksPreferences extends ExtensionPreferences {
         listBox.append(separatorRow);
 
         for (const category of defaultCategories) {
-            addRow(category.name, category.enabled, category.merge, category.isDefault, false, category.order);
+            addRow(category.name, category.enabled, category.merge, category.isDefault, false, category.order, category.icon);
         }
 
         // Scroll to the top
@@ -393,6 +438,138 @@ export default class EssentialTweaksPreferences extends ExtensionPreferences {
         noticeDialog.present();
     }
 
+    // Opens a searchable picker over the current icon theme's symbolic
+    // icons and calls onSelect(iconName) with the chosen icon, or
+    // onSelect(null) if the user picks "Use Default Icon" instead.
+    // Nothing is called if the dialog is simply cancelled/closed.
+    _openIconChooser(window, currentIcon, onSelect) {
+        const dialog = new Gtk.Dialog({
+            transient_for: window,
+            modal: true,
+            title: _('Choose an Icon'),
+            default_width: 480,
+            default_height: 520,
+            use_header_bar: true
+        });
+
+        dialog.add_button(_('Cancel'), Gtk.ResponseType.CANCEL);
+        dialog.add_button(_('Use Default Icon'), Gtk.ResponseType.REJECT);
+
+        const contentArea = dialog.get_content_area();
+
+        const searchEntry = new Gtk.SearchEntry({
+            placeholder_text: _('Search symbolic icons (e.g. mail, folder, web)\u2026'),
+            margin_top: 8,
+            margin_start: 8,
+            margin_end: 8
+        });
+        contentArea.append(searchEntry);
+
+        const scrolled = new Gtk.ScrolledWindow({
+            vexpand: true,
+            hexpand: true,
+            margin_top: 8,
+            margin_bottom: 8,
+            margin_start: 8,
+            margin_end: 8
+        });
+        contentArea.append(scrolled);
+
+        const flowBox = new Gtk.FlowBox({
+            selection_mode: Gtk.SelectionMode.NONE,
+            max_children_per_line: 8,
+            row_spacing: 4,
+            column_spacing: 4,
+            homogeneous: true,
+            valign: Gtk.Align.START
+        });
+        scrolled.set_child(flowBox);
+
+        const hintLabel = new Gtk.Label({
+            label: _('Start typing to search your system\u2019s symbolic icons.'),
+            margin_top: 24
+        });
+        hintLabel.add_css_class('dim-label');
+
+        // The full icon-name list is read once up front, but matching results only get turned into actual
+        // FlowBoxChild/Image widgets on demand as the user types, and
+        // capped, so opening the dialog or searching a common substring
+        // never has to build thousands of icon widgets at once.
+        const iconTheme = Gtk.IconTheme.get_for_display(window.get_display());
+        const allIconNames = iconTheme.get_icon_names()
+            .filter(iconName => iconName.endsWith('-symbolic'))
+            .sort();
+
+        const MAX_RESULTS = 200;
+
+        const populate = query => {
+            let child = flowBox.get_first_child();
+            while (child) {
+                const next = child.get_next_sibling();
+                flowBox.remove(child);
+                child = next;
+            }
+
+            const needle = query.trim().toLowerCase();
+            if (!needle) {
+                if (scrolled.get_child() !== hintLabel) {
+                    scrolled.set_child(hintLabel);
+                }
+                return;
+            }
+
+            if (scrolled.get_child() !== flowBox) {
+                scrolled.set_child(flowBox);
+            }
+
+            let count = 0;
+            for (const iconName of allIconNames) {
+                if (!iconName.toLowerCase().includes(needle)) {
+                    continue;
+                }
+
+                const button = new Gtk.Button({
+                    tooltip_text: iconName
+                });
+                button.add_css_class('flat');
+                button.set_child(new Gtk.Image({
+                    icon_name: iconName,
+                    pixel_size: 24
+                }));
+                button.connect('clicked', () => {
+                    onSelect(iconName);
+                    dialog.destroy();
+                });
+
+                flowBox.append(button);
+
+                count++;
+                if (count >= MAX_RESULTS) {
+                    break;
+                }
+            }
+        };
+
+        searchEntry.connect('search-changed', () => {
+            populate(searchEntry.get_text());
+        });
+
+        populate(currentIcon || '');
+        if (currentIcon) {
+            searchEntry.set_text(currentIcon);
+        }
+
+        dialog.connect('response', (_dlg, response) => {
+            if (response === Gtk.ResponseType.REJECT) {
+                onSelect(null);
+            }
+            dialog.destroy();
+        });
+
+        dialog.present();
+        searchEntry.grab_focus();
+    }
+
     // Validate and serialize the custom category rows before saving them.
     _collectCategories(rows) {
         // Save order is independent of the editor's visual order (customs
@@ -470,6 +647,10 @@ export default class EssentialTweaksPreferences extends ExtensionPreferences {
                 category.order = rowEntry.orderSpin.get_value_as_int();
             }
 
+            if (rowEntry.iconState.value) {
+                category.icon = rowEntry.iconState.value;
+            }
+
             categories.push(category);
         }
 
@@ -488,6 +669,7 @@ export default class EssentialTweaksPreferences extends ExtensionPreferences {
             enabled: c.hasOwnProperty('enabled') ? Boolean(c.enabled) : true,
             merge: (c.merge && c.merge !== false) ? String(c.merge) : false,
             order: null,
+            icon: null,
             isDefault: true
         }));
 
@@ -505,6 +687,7 @@ export default class EssentialTweaksPreferences extends ExtensionPreferences {
                             enabled: c.hasOwnProperty('enabled') ? Boolean(c.enabled) : true,
                             merge: (c.merge && c.merge !== false) ? String(c.merge) : false,
                             order: Number.isFinite(orderValue) ? orderValue : null,
+                            icon: c.icon ? String(c.icon) : null,
                             isDefault: false
                         };
                     });
