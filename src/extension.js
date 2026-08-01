@@ -38,9 +38,7 @@ export default class VerticalAppGridExtension extends Extension {
         this._onOverviewReady = () => {
             const attached = this._attachOverviewControls();
             this._setAppDisplayLayout();
-            if (this._installAppDisplayBoxOverride) {
-                this._installAppDisplayBoxOverride();
-            }
+            this._installAppDisplayBoxOverride();
             this._updateWorkspacesVisibility();
             return attached;
         };
@@ -69,115 +67,6 @@ export default class VerticalAppGridExtension extends Extension {
 
             this._overviewLayoutManager._appDisplay = this._vertAppDisplay;
         };
-
-        // Poll until the overview is fully ready, then attach the UI. This
-        // covers the case where the overview is not initialized immediately.
-        this._startOverviewReadyPoll = () => {
-            if (this._overviewReadyPollId !== null) {
-                return;
-            }
-
-            this._overviewReadyPollId = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 100, () => {
-                if (this._onOverviewReady()) {
-                    this._overviewReadyPollId = null;
-                    return GLib.SOURCE_REMOVE;
-                }
-                return GLib.SOURCE_CONTINUE;
-            });
-        };
-
-        this._stopOverviewReadyPoll = () => {
-            if (this._overviewReadyPollId !== null) {
-                GLib.source_remove(this._overviewReadyPollId);
-                this._overviewReadyPollId = null;
-            }
-        };
-
-        // Ensure we listen for the overview showing signal so we can attach the
-        // app display later if it was not ready at enable().
-        this._ensureOverviewConnections = () => {
-            if (!Main.overview || this._overviewShowingId !== null) {
-                return;
-            }
-
-            if (Main.overview.connect) {
-                this._overviewShowingId = Main.overview.connect('showing', () => {
-                    this._onOverviewReady();
-                });
-            }
-        };
-
-        // Apply workspace visibility preference. Show or hide the workspace
-        // preview panel based on the extension setting, and force a layout
-        // refresh if needed.
-        this._updateWorkspacesVisibility = (forceShow = false) => {
-            try {
-                const show = forceShow || this._settings.get_boolean('show-workspaces');
-                const controls = this._overviewControls || this._getOverviewControls();
-
-                if (!controls) {
-                    this._ensureOverviewConnections();
-                    return;
-                }
-
-                this._overviewControls = controls;
-                const workspaceDisplay = controls._workspacesDisplay;
-
-                if (!workspaceDisplay) {
-                    // Controls exist but haven't finished constructing yet; retry.
-                    this._ensureOverviewConnections();
-                    return;
-                }
-
-                let hidden = false;
-
-                // Rely on show()/hide() alone
-                try {
-                    if (show) {
-                        workspaceDisplay.show();
-                    } else {
-                        workspaceDisplay.hide();
-                    }
-                    hidden = true;
-                } catch (e) {
-                    log(`vertigrid: Error toggling workspacesDisplay: ${e}`);
-                }
-
-                // Force layout updates
-                if (hidden) {
-                    try {
-                        if (controls.layout_manager) {
-                            controls.layout_manager.layout_changed();
-                        }
-                        controls.queue_relayout();
-                        const parent = controls.get_parent();
-                        if (parent && parent.layout_manager) {
-                            parent.layout_manager.layout_changed();
-                        }
-                        if (parent) {
-                            parent.queue_relayout();
-                        }
-                    } catch (e) {
-                        log(`vertigrid: Error in layout update: ${e}`);
-                    }
-                }
-            } catch (e) {
-                log(`vertigrid: Failed to update workspace visibility: ${e}`);
-            }
-        };
-
-        const ViewPage = {
-            WINDOWS: 0,
-            APPS: 1,
-            SEARCH: 2
-        };
-
-        // _onOverviewReady() already calls _attachOverviewControls() and
-        // _setAppDisplayLayout() itself, so calling them again here first
-        // would just be redundant idempotent work.
-        this._ensureOverviewConnections();
-        this._onOverviewReady();
-        this._startOverviewReadyPoll();
 
         // Reclaim the space GNOME reserves for the "workspace preview" when
         // workspaces are hidden, so the app grid can use more vertical room.
@@ -222,7 +111,93 @@ export default class VerticalAppGridExtension extends Extension {
             return true;
         };
 
-        this._installAppDisplayBoxOverride();
+        // Poll until the overview is fully ready, then attach the UI. This
+        // covers the case where the overview is not initialized immediately.
+        this._startOverviewReadyPoll = () => {
+            if (this._overviewReadyPollId !== null) {
+                return;
+            }
+
+            this._overviewReadyPollId = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 100, () => {
+                if (this._onOverviewReady()) {
+                    this._overviewReadyPollId = null;
+                    return GLib.SOURCE_REMOVE;
+                }
+                return GLib.SOURCE_CONTINUE;
+            });
+        };
+
+        this._stopOverviewReadyPoll = () => {
+            if (this._overviewReadyPollId !== null) {
+                GLib.source_remove(this._overviewReadyPollId);
+                this._overviewReadyPollId = null;
+            }
+        };
+
+        // Ensure we listen for the overview showing signal so we can attach the
+        // app display later if it was not ready at enable().
+        this._ensureOverviewConnections = () => {
+            if (!Main.overview || this._overviewShowingId !== null) {
+                return;
+            }
+
+            this._overviewShowingId = Main.overview.connect('showing', () => {
+                this._onOverviewReady();
+            });
+        };
+
+        // Apply workspace visibility preference. Show or hide the workspace
+        // preview panel based on the extension setting, and force a layout
+        // refresh if needed.
+        this._updateWorkspacesVisibility = (forceShow = false) => {
+            const show = forceShow || this._settings.get_boolean('show-workspaces');
+            const controls = this._overviewControls || this._getOverviewControls();
+
+            if (!controls) {
+                this._ensureOverviewConnections();
+                return;
+            }
+
+            this._overviewControls = controls;
+            const workspaceDisplay = controls._workspacesDisplay;
+
+            if (!workspaceDisplay) {
+                // Controls exist but haven't finished constructing yet; retry.
+                this._ensureOverviewConnections();
+                return;
+            }
+
+            if (show) {
+                workspaceDisplay.show();
+            } else {
+                workspaceDisplay.hide();
+            }
+
+            if (controls.layout_manager) {
+                controls.layout_manager.layout_changed();
+            }
+            controls.queue_relayout();
+
+            const parent = controls.get_parent();
+            if (parent && parent.layout_manager) {
+                parent.layout_manager.layout_changed();
+            }
+            if (parent) {
+                parent.queue_relayout();
+            }
+        };
+
+        const ViewPage = {
+            WINDOWS: 0,
+            APPS: 1,
+            SEARCH: 2
+        };
+
+        // _onOverviewReady() already calls _attachOverviewControls(),
+        // _setAppDisplayLayout(), and _installAppDisplayBoxOverride()
+        this._ensureOverviewConnections();
+        this._onOverviewReady();
+        this._startOverviewReadyPoll();
 
         this._injectionManager.overrideMethod(overviewControlsProto, '_setVisibility', originalFn => function() {
             if (!extension._settings.get_boolean('show-workspaces')) {
@@ -322,9 +297,7 @@ export default class VerticalAppGridExtension extends Extension {
     // Cleanup all injected state and restore original Shell behavior.
     disable() {
         if (this._overviewReadyPollId !== null) {
-            try {
-                GLib.source_remove(this._overviewReadyPollId);
-            } catch (e) {}
+            GLib.source_remove(this._overviewReadyPollId);
             this._overviewReadyPollId = null;
         }
 
@@ -355,16 +328,12 @@ export default class VerticalAppGridExtension extends Extension {
 
         // Disconnect settings signal and restore workspace visibility before clearing
         if (this._settingsSignal && this._settings) {
-            try {
-                this._settings.disconnect(this._settingsSignal);
-            } catch (e) {}
+            this._settings.disconnect(this._settingsSignal);
             this._settingsSignal = null;
         }
 
-        if (this._overviewShowingId !== null && Main.overview && Main.overview.disconnect) {
-            try {
-                Main.overview.disconnect(this._overviewShowingId);
-            } catch (e) {}
+        if (this._overviewShowingId !== null && Main.overview) {
+            Main.overview.disconnect(this._overviewShowingId);
             this._overviewShowingId = null;
         }
 
