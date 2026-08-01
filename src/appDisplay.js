@@ -24,8 +24,15 @@ import {
     getAppCategory,
     setAppCategory,
     setCategoryOrder,
-    getCategoryOrderMap
+    getCategoryOrderMap,
+    getCategoryIconMap
 } from './categories.js';
+import {
+    VerticalScrollView
+} from './scrollView.js';
+import {
+    VerticalLayout
+} from './layout.js';
 
 // Main vertical app grid widget and helpers for GNOME overview app display.
 const CATEGORY_ICONS = {
@@ -280,6 +287,21 @@ export const VerticalAppDisplay = GObject.registerClass(
             this._setNavCollapsed(!this._navAlwaysVisible);
         }
 
+        // translate_coordinates() isn't callable on every actor here -
+        // St.Viewport/St.Label instances have been observed to throw
+        // "translate_coordinates is not a function" in this Shell/Mutter
+        // version, so get_transformed_position() is a required fallback,
+        // not just defensive padding.
+        _getStagePosition(actor) {
+            if (actor.translate_coordinates) {
+                return actor.translate_coordinates(global.stage, 0, 0);
+            }
+            if (actor.get_transformed_position) {
+                return actor.get_transformed_position();
+            }
+            return [0, 0];
+        }
+
         // Computes where in destView's child list a drop at stage
         // coordinates (stageX, stageY) should land, using the same
         // row/column formula VerticalLayout uses to actually place
@@ -287,42 +309,27 @@ export const VerticalAppDisplay = GObject.registerClass(
         // reverse. This works uniformly whether the pointer is over an
         // icon or over a gap between/after icons.
         _computeGridInsertIndex(destView, stageX, stageY) {
-            try {
-                const children = destView.get_children();
+            const children = destView.get_children();
+            const [viewX, viewY] = this._getStagePosition(destView);
 
-                let viewPos = [0, 0];
-                if (destView.translate_coordinates) {
-                    viewPos = destView.translate_coordinates(global.stage, 0, 0);
-                } else if (destView.get_transformed_position) {
-                    viewPos = destView.get_transformed_position();
-                }
+            const localX = stageX - viewX;
+            const localY = stageY - viewY;
 
-                const localX = stageX - viewPos[0];
-                const localY = stageY - viewPos[1];
+            const layout = destView.layout_manager;
+            const columns = Math.max(1, layout._columns || 1);
+            const spacing = layout._spacing || 0;
+            const childSize = layout._getMinChildSize(children);
+            const cellSize = childSize + spacing;
 
-                const layout = destView.layout_manager;
-                const columns = Math.max(1, layout._columns || 1);
-                const spacing = layout._spacing || 0;
-                const childSize = layout._getMinChildSize ?
-                    layout._getMinChildSize(children) : 0;
-                const cellSize = childSize + spacing;
-
-                if (cellSize <= 0 || children.length === 0) {
-                    return children.length;
-                }
-
-                const col = Math.min(columns - 1, Math.max(0, Math.floor(localX / cellSize)));
-                const row = Math.max(0, Math.floor(localY / cellSize));
-
-                const index = row * columns + col;
-                return Math.min(Math.max(index, 0), children.length);
-            } catch (e) {
-                try {
-                    return destView.get_children().length;
-                } catch (e2) {
-                    return 0;
-                }
+            if (cellSize <= 0 || children.length === 0) {
+                return children.length;
             }
+
+            const col = Math.min(columns - 1, Math.max(0, Math.floor(localX / cellSize)));
+            const row = Math.max(0, Math.floor(localY / cellSize));
+
+            const index = row * columns + col;
+            return Math.min(Math.max(index, 0), children.length);
         }
 
         _getInstalledIdsSet() {
@@ -365,7 +372,8 @@ export const VerticalAppDisplay = GObject.registerClass(
                 this._favoritesLabel.hide();
                 this._favoritesView.hide();
 
-                const categoryOrder = getCategoryOrder();
+                const categoryOrder = getCategoryOrder(this._settings);
+                const categoryIcons = getCategoryIconMap(this._settings);
                 const appsByCategory = this._loadAppsByCategory(categoryOrder);
 
                 // First, add favorites section if enabled
@@ -457,7 +465,7 @@ export const VerticalAppDisplay = GObject.registerClass(
                     }
                 }
 
-                this._buildCategoryNav(appsByCategory, categoryOrder);
+                this._buildCategoryNav(appsByCategory, categoryOrder, categoryIcons);
                 this._navBox.show();
             } else {
                 this._navBox.hide();
@@ -569,9 +577,7 @@ export const VerticalAppDisplay = GObject.registerClass(
             // Extra space after the last section so it can be scrolled
             // further up rather than stopping flush with the bottom edge.
             if (this._bottomSpacer) {
-                try {
-                    this._bottomSpacer.destroy();
-                } catch (e) {}
+                this._bottomSpacer.destroy();
                 this._bottomSpacer = null;
             }
 
@@ -582,7 +588,7 @@ export const VerticalAppDisplay = GObject.registerClass(
             this._scrollView.add_child(this._bottomSpacer);
         }
 
-        _buildCategoryNav(appsByCategory, categoryOrder) {
+        _buildCategoryNav(appsByCategory, categoryOrder, categoryIcons) {
             this._destroyCategoryNav();
 
             const visibleCategories = [];
@@ -634,7 +640,7 @@ export const VerticalAppDisplay = GObject.registerClass(
                 });
 
                 const icon = new St.Icon({
-                    icon_name: CATEGORY_ICONS[item.id] || 'applications-other-symbolic',
+                    icon_name: (categoryIcons && categoryIcons.get(item.id)) || CATEGORY_ICONS[item.id] || 'applications-other-symbolic',
                     icon_size: 16,
                     y_align: Clutter.ActorAlign.CENTER,
                     style: 'margin-right: 10px;',
@@ -694,14 +700,10 @@ export const VerticalAppDisplay = GObject.registerClass(
             this._navTeardownInProgress = true;
 
             this._navItems.forEach(button => {
-                try {
-                    if (button._clickedId) button.disconnect(button._clickedId);
-                    if (button._enterId) button.disconnect(button._enterId);
-                    if (button._leaveId) button.disconnect(button._leaveId);
-                } catch (e) {}
-                try {
-                    button.destroy();
-                } catch (e) {}
+                if (button._clickedId) button.disconnect(button._clickedId);
+                if (button._enterId) button.disconnect(button._enterId);
+                if (button._leaveId) button.disconnect(button._leaveId);
+                button.destroy();
             });
 
             this._navItems = [];
@@ -933,7 +935,7 @@ export const VerticalAppDisplay = GObject.registerClass(
             // custom-categories/app-category-overrides from settings once
             // per installed app, which is wasted work since both are the
             // same for every app within a single _loadAppsByCategory() call.
-            const categoryContext = getCategoryContext();
+            const categoryContext = getCategoryContext(this._settings);
 
             const appsByCategory = {};
             for (const cat of categoryOrder) {
@@ -994,7 +996,7 @@ export const VerticalAppDisplay = GObject.registerClass(
             }
 
             // Apply user-defined ordering (from app-category-overrides with index)
-            const orderMap = getCategoryOrderMap();
+            const orderMap = getCategoryOrderMap(this._settings);
             for (const [cat, order] of orderMap.entries()) {
                 if (!appsByCategory[cat]) continue;
                 const present = new Set(appsByCategory[cat]);
@@ -1163,14 +1165,7 @@ export const VerticalAppDisplay = GObject.registerClass(
                 const view = this._categoryViews[cat];
                 if (!view) continue;
 
-                let viewPos = [0, 0];
-                try {
-                    if (view.translate_coordinates) {
-                        viewPos = view.translate_coordinates(global.stage, 0, 0);
-                    } else if (view.get_transformed_position) {
-                        viewPos = view.get_transformed_position();
-                    }
-                } catch (e) {}
+                const viewPos = this._getStagePosition(view);
 
                 let bounds = null;
                 try {
@@ -1202,14 +1197,7 @@ export const VerticalAppDisplay = GObject.registerClass(
                     if (!bounds || height <= 2) {
                         const label = this._categoryLabels[cat];
                         if (label) {
-                            let labelPos = [0, 0];
-                            try {
-                                if (label.translate_coordinates) {
-                                    labelPos = label.translate_coordinates(global.stage, 0, 0);
-                                } else if (label.get_transformed_position) {
-                                    labelPos = label.get_transformed_position();
-                                }
-                            } catch (e) {}
+                            const labelPos = this._getStagePosition(label);
 
                             let labelBox = null;
                             try {
@@ -1233,12 +1221,7 @@ export const VerticalAppDisplay = GObject.registerClass(
                                     const nextCat = this._categoryOrder[orderIdx + 1];
                                     const nextLabel = this._categoryLabels[nextCat];
                                     if (nextLabel) {
-                                        let nextLabelPos = [0, 0];
-                                        if (nextLabel.translate_coordinates) {
-                                            nextLabelPos = nextLabel.translate_coordinates(global.stage, 0, 0);
-                                        } else if (nextLabel.get_transformed_position) {
-                                            nextLabelPos = nextLabel.get_transformed_position();
-                                        }
+                                        const nextLabelPos = this._getStagePosition(nextLabel);
                                         const gapToNext = nextLabelPos[1] - (labelPos[1] + labelHeight);
                                         if (gapToNext > 0) {
                                             // Leave a small buffer before the next header rather than touching it exactly.
@@ -1382,9 +1365,9 @@ export const VerticalAppDisplay = GObject.registerClass(
                                 withoutDragged.splice(clampedIndex, 0, draggedId);
 
                                 try {
-                                    setCategoryOrder(cat, withoutDragged);
+                                    setCategoryOrder(this._settings, cat, withoutDragged);
                                 } catch (e) {
-                                    setAppCategory(src._appId, cat);
+                                    setAppCategory(this._settings, src._appId, cat);
                                 }
 
                                 this._redisplay();
@@ -1422,42 +1405,30 @@ export const VerticalAppDisplay = GObject.registerClass(
 
         _cancelPendingDrag() {
             if (this._pendingMotionId) {
-                try {
-                    global.stage.disconnect(this._pendingMotionId);
-                } catch (e) {}
+                global.stage.disconnect(this._pendingMotionId);
                 this._pendingMotionId = null;
             }
             if (this._pendingReleaseId) {
-                try {
-                    global.stage.disconnect(this._pendingReleaseId);
-                } catch (e) {}
+                global.stage.disconnect(this._pendingReleaseId);
                 this._pendingReleaseId = null;
             }
         }
 
         _cancelActiveDrag() {
             if (this._dragCapturedHandler) {
-                try {
-                    global.stage.disconnect(this._dragCapturedHandler);
-                } catch (e) {}
+                global.stage.disconnect(this._dragCapturedHandler);
                 this._dragCapturedHandler = null;
             }
             if (this._dragGhost) {
-                try {
-                    global.stage.remove_child(this._dragGhost);
-                } catch (e) {}
+                global.stage.remove_child(this._dragGhost);
                 this._dragGhost = null;
             }
             if (this._highlightedView) {
-                try {
-                    this._highlightedView.set_style('');
-                } catch (e) {}
+                this._highlightedView.set_style('');
                 this._highlightedView = null;
             }
             if (this._dragActor) {
-                try {
-                    this._dragActor._dragging = false;
-                } catch (e) {}
+                this._dragActor._dragging = false;
                 this._dragActor = null;
             }
         }
@@ -1477,12 +1448,10 @@ export const VerticalAppDisplay = GObject.registerClass(
         // Call this before destroying any viewport that was
         // constructed with `new VerticalLayout(...)`.
         _destroyViewportLayout(viewport) {
-            try {
-                const layoutManager = viewport && viewport.layout_manager;
-                if (layoutManager && typeof layoutManager.destroy === 'function') {
-                    layoutManager.destroy();
-                }
-            } catch (e) {}
+            const layoutManager = viewport && viewport.layout_manager;
+            if (layoutManager) {
+                layoutManager.destroy();
+            }
         }
 
         _findLabelActor(actor) {
@@ -1667,9 +1636,7 @@ export const VerticalAppDisplay = GObject.registerClass(
             this._settings.disconnectObject(this);
 
             if (this._scrollValueHandler) {
-                try {
-                    this._scrollView.vadjustment.disconnect(this._scrollValueHandler);
-                } catch (e) {}
+                this._scrollView.vadjustment.disconnect(this._scrollValueHandler);
                 this._scrollValueHandler = null;
             }
 
@@ -1706,314 +1673,5 @@ export const VerticalAppDisplay = GObject.registerClass(
             }
 
             super.destroy();
-        }
-    });
-
-const VerticalScrollView = GObject.registerClass(
-    class VerticalScrollView extends St.ScrollView {
-        // Custom scroll view with animated scrolling and precise child targeting.
-        _init(settings) {
-            super._init({
-                hscrollbar_policy: St.PolicyType.NEVER,
-                vscrollbar_policy: St.PolicyType.NEVER
-            });
-
-            this._settings = settings;
-            this._scroll = 0;
-            this._scrollAnim = {
-                lock: null,
-                startTime: 0,
-                startValue: 0,
-                delta: 0,
-                duration: 0
-            };
-            this._trackpadTime = 0;
-
-            const box = new St.BoxLayout({
-                vertical: true,
-                x_expand: false,
-                y_expand: false
-            });
-
-            this._scrollBox = box;
-            this.set_child(box);
-        }
-
-        add_child(child) {
-            this._scrollBox.add_child(child);
-        }
-
-        get_child() {
-            return this._scrollBox;
-        }
-
-        // Returns the child's vertical offset from the top of the scroll
-        // view's content, in the same coordinate space as vadjustment.value.
-        // Shared by scrollToChild() and the active-category scroll watcher
-        // so both agree on exactly where a given section sits.
-        getChildY(child) {
-            const childBox = child.get_allocation_box();
-            let actor = child;
-            let childY = childBox.y1;
-
-            while ((actor = actor.get_parent()) !== this) {
-                if (!actor)
-                    return childY;
-                childY += actor.get_allocation_box().y1;
-            }
-
-            return childY;
-        }
-
-        scrollToChild(child, align = 'center') {
-            const childY = this.getChildY(child);
-            const childBox = child.get_allocation_box();
-
-            const adjustment = this.vadjustment;
-
-            let scroll;
-            if (align === 'top') {
-                // Scroll so the child sits at the top of the viewport, with a
-                // small amount of breathing room above it.
-                const topPadding = 8;
-                scroll = childY - topPadding;
-            } else {
-                // Scroll to keep the child vertically centered
-                const childCenter = childY + childBox.get_height() / 2;
-                scroll = childCenter - adjustment.page_size / 2;
-            }
-
-            this.scrollTo(scroll);
-        }
-
-        scrollTo(scroll, animate = true, duration = 200) {
-            const now = GLib.get_monotonic_time();
-
-            const adjustment = this.vadjustment;
-            const anim = this._scrollAnim;
-
-            // Only scroll if the clamped distance is greater than zero to prevent
-            // rapidly retriggering the animation while holding down a key
-            const min = adjustment.lower;
-            const max = adjustment.upper - adjustment.page_size;
-
-            const scrollClamped = Math.clamp(scroll, min, max);
-            const distance = Math.abs(this.scroll - scrollClamped);
-
-            if (distance === 0) {
-                return Clutter.EVENT_STOP;
-            }
-
-            this._scroll = scrollClamped;
-
-            if (animate) {
-                // Init scroll animation
-                anim.startTime = now;
-                anim.startValue = adjustment.value;
-                anim.delta = this.scroll - adjustment.value;
-
-                if (anim.lock === null) {
-                    anim.lock = global.stage.connect('after-paint', this._scrollAnimationFrame.bind(this));
-                    anim.duration = duration * 1000;
-                }
-            } else {
-                // Cancel running animation
-                if (anim.lock) {
-                    anim.lock = global.stage.disconnect(anim.lock) || null;
-                }
-
-                adjustment.value = this.scroll;
-            }
-
-            // Redraw to trigger the next animation frame
-            this.queue_redraw();
-
-            return Clutter.EVENT_STOP;
-        }
-
-        _scrollAnimationFrame() {
-            const now = GLib.get_monotonic_time();
-
-            const adjustment = this.vadjustment;
-            const anim = this._scrollAnim;
-
-            // Animate towards the scroll target
-            const elapsed = now - anim.startTime;
-            const progress = Math.clamp(elapsed / anim.duration, 0, 1);
-
-            adjustment.value = anim.startValue + anim.delta * easeOutCubic(progress);
-
-            if (progress >= 1) {
-                anim.lock = global.stage.disconnect(anim.lock) || null;
-            }
-
-            this.queue_redraw();
-        }
-
-        vfunc_scroll_event(event) {
-            if (this._settings.get_boolean('animate-scroll')) {
-                return this._animateScroll(event);
-            }
-
-            return super.vfunc_scroll_event(event);
-        }
-
-        _animateScroll(event) {
-            const now = GLib.get_monotonic_time();
-
-            // Ignore emulated events
-            if (event.get_flags() & Clutter.EventFlags.FLAG_POINTER_EMULATED) {
-                return Clutter.EVENT_STOP;
-            }
-
-            // Get scroll delta
-            const adjustment = this.vadjustment;
-
-            const direction = event.get_scroll_direction();
-            const step = adjustment.page_size ** (2 / 3);
-
-            let delta = 0;
-            let animate = false;
-
-            if (direction === Clutter.ScrollDirection.SMOOTH) {
-                // Sometimes events without a smooth delta are emitted when using a
-                // trackpad, so this debounce timestamp is used to prevent any sudden
-                // jumps while scrolling
-                this._trackpadTime = now;
-
-                delta = event.get_scroll_delta()[Clutter.Orientation.VERTICAL] || 0;
-            } else if (now - this._trackpadTime > 1000 * 1000) {
-                if (direction === Clutter.ScrollDirection.UP) {
-                    delta = -1;
-                } else if (direction === Clutter.ScrollDirection.DOWN) {
-                    delta = 1;
-                }
-
-                animate = true;
-            }
-
-            // Animate to the new scroll position
-            const min = adjustment.lower;
-            const max = adjustment.upper - adjustment.page_size;
-
-            const clampedScroll = Math.clamp(this.scroll + delta * step, min, max);
-            const distance = Math.abs(this.scroll - clampedScroll);
-            const duration = (distance / 100) * 200;
-
-            if (distance === 0) {
-                return Clutter.EVENT_STOP;
-            }
-
-            return this.scrollTo(clampedScroll, animate, duration);
-        }
-
-        destroy() {
-            if (this._scrollAnim.lock) {
-                global.stage.disconnect(this._scrollAnim.lock);
-            }
-            super.destroy();
-        }
-
-        get scroll() {
-            return this._scroll;
-        }
-    });
-
-const VerticalLayout = GObject.registerClass(
-    class VerticalLayout extends Clutter.LayoutManager {
-        _init(settings) {
-            super._init();
-
-            this._settings = settings;
-
-            settings.connectObject('changed', (_, key) => {
-                if (['columns', 'icon-spacing'].includes(key)) {
-                    this._columns = settings.get_int('columns');
-                    this._spacing = settings.get_int('icon-spacing');
-
-                    this.layout_changed();
-                }
-            }, this);
-
-            this._columns = settings.get_int('columns');
-            this._spacing = settings.get_int('icon-spacing');
-        }
-
-        vfunc_get_preferred_width(container, _forHeight) {
-            const children = container.get_children();
-            const childSize = this._getMinChildSize(children);
-
-            const columns = Math.min(children.length, this._columns);
-            const size = columns * childSize + (columns - 1) * this._spacing;
-
-            if (columns) {
-                return [size, size];
-            }
-
-            return [0, 0];
-        }
-
-        vfunc_get_preferred_height(container, _forWidth) {
-            const children = container.get_children();
-            const childSize = this._getMinChildSize(children);
-
-            const rows = Math.ceil(children.length / this._columns);
-            const size = rows * childSize + (rows - 1) * this._spacing;
-
-            if (rows) {
-                return [size, size];
-            }
-
-            return [0, 0];
-        }
-
-        vfunc_allocate(container, _box) {
-            const children = container.get_children();
-            const childSize = this._getMinChildSize(children);
-
-            const childBox = new Clutter.ActorBox();
-
-            for (let i = 0; i < children.length; i++) {
-                const col = i % this._columns;
-                const row = Math.floor(i / this._columns);
-
-                const x = col * (childSize + this._spacing);
-                const y = row * (childSize + this._spacing);
-
-                const [, ,
-                    naturalWidth, naturalHeight
-                ] = children[i].get_preferred_size();
-
-                childBox.set_origin(
-                    Math.floor(x),
-                    Math.floor(y)
-                );
-
-                childBox.set_size(
-                    Math.max(childSize, naturalWidth),
-                    Math.max(childSize, naturalHeight)
-                );
-
-                children[i].allocate(childBox);
-            }
-        }
-
-        _getMinChildSize(children) {
-            let minWidth = 0;
-            let minHeight = 0;
-
-            children.forEach(child => {
-                const childMinHeight = child.get_preferred_height(-1)[0];
-                const childMinWidth = child.get_preferred_width(-1)[0];
-
-                minWidth = Math.max(minWidth, childMinWidth);
-                minHeight = Math.max(minHeight, childMinHeight);
-            });
-
-            return Math.max(minWidth, minHeight);
-        }
-
-        destroy() {
-            this._settings.disconnectObject(this);
         }
     });
