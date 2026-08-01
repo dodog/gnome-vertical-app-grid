@@ -3,9 +3,6 @@ Category config and custom category storage helpers.
 Custom categories are saved under 'custom-categories' and survive updates.
 */
 
-import Gio from 'gi://Gio';
-import GLib from 'gi://GLib';
-
 // Marks a string for translation extraction (xgettext) without translating
 // it here. These are internal category IDs (also matched against .desktop
 // Categories= keys), so they must stay untranslated at this point - the
@@ -39,56 +36,6 @@ export function getSettingsStrv(settings, key, fallback = []) {
         log(`vertigrid: Failed to read ${key}: ${e}`);
         return fallback;
     }
-}
-
-// Resolve the extension's own GSettings schema from the local schemas
-// directory, falling back to the system schema source if necessary.
-function _resolveExtensionSettings(schemaId) {
-    const extensionDir = GLib.path_get_dirname(
-        Gio.File.new_for_uri(
-            import.meta.url).get_path()
-    );
-    const schemaDir = GLib.build_filenamev([extensionDir, 'schemas']);
-    const compiledSchemaPath = GLib.build_filenamev([schemaDir, 'gschemas.compiled']);
-
-    let schemaSource;
-    if (GLib.file_test(compiledSchemaPath, GLib.FileTest.EXISTS)) {
-        schemaSource = Gio.SettingsSchemaSource.new_from_directory(
-            schemaDir,
-            Gio.SettingsSchemaSource.get_default(),
-            false
-        );
-    } else {
-        schemaSource = Gio.SettingsSchemaSource.get_default();
-    }
-
-    const schemaObj = schemaSource.lookup(schemaId, true);
-    if (!schemaObj) {
-        throw new Error(`Schema ${schemaId} could not be found in the local or system schema sources.`);
-    }
-
-    return new Gio.Settings({
-        settings_schema: schemaObj
-    });
-}
-
-// Cache the resolved settings object to avoid repeated schema lookup during
-// runtime and preferences loading.
-let _settingsInstance = null;
-let _settingsInitAttempted = false;
-
-function _getSettings() {
-    if (!_settingsInitAttempted) {
-        _settingsInitAttempted = true;
-        try {
-            _settingsInstance = _resolveExtensionSettings('org.gnome.shell.extensions.vertigrid');
-        } catch (e) {
-            log(`vertigrid: Failed to resolve settings schema in categories.js: ${e}`);
-            _settingsInstance = null;
-        }
-    }
-
-    return _settingsInstance;
 }
 
 // Built-in default categories shown when no custom categories are set.
@@ -196,26 +143,25 @@ function _normalizeCategory(category, defaultOrder) {
     const orderValue = Number(category.order);
     const order = Number.isFinite(orderValue) ? orderValue : null;
 
+    let icon = null;
+    if (category.hasOwnProperty('icon')) {
+        const trimmedIcon = category.icon ? String(category.icon).trim() : '';
+        icon = trimmedIcon || null;
+    }
+
     return {
         name,
         enabled,
         merge,
         order,
+        icon,
         _defaultOrder: defaultOrder
     };
 }
 
-function _getSettingsStringLocal(key, fallback = '') {
-    return getSettingsString(_getSettings(), key, fallback);
-}
-
-function _getSettingsStrvLocal(key, fallback = []) {
-    return getSettingsStrv(_getSettings(), key, fallback);
-}
-
 // Read the saved custom categories JSON from settings and normalize it.
-function _loadCustomCategories() {
-    const raw = _getSettingsStringLocal('custom-categories', '[]');
+function _loadCustomCategories(settings) {
+    const raw = getSettingsString(settings, 'custom-categories', '[]');
     try {
         const parsed = JSON.parse(raw);
         if (!Array.isArray(parsed)) {
@@ -237,14 +183,15 @@ function _categoryNamesEqual(a, b) {
 
 // Build the effective category list by merging built-in defaults with any
 // custom category overrides stored in settings.
-export function getCategories() {
+export function getCategories(settings) {
     const categories = DEFAULT_CATEGORIES.map((category, index) => ({
         ...category,
         order: null,
+        icon: null,
         _defaultOrder: index
     }));
 
-    const customCategories = _loadCustomCategories();
+    const customCategories = _loadCustomCategories(settings);
     for (const customCategory of customCategories) {
         const existingIndex = categories.findIndex(category => _categoryNamesEqual(category.name, customCategory.name));
         if (existingIndex >= 0) {
@@ -266,17 +213,29 @@ export function getCategories() {
     return categories;
 }
 
-export function getCategoryOrder() {
-    return getCategories()
+export function getCategoryOrder(settings) {
+    return getCategories(settings)
         .filter(cat => cat.enabled && !cat.merge)
         .map(cat => cat.name);
 }
 
-export function getAllCategories() {
-    return [...getCategories().map(cat => cat.name), 'Other'];
+export function getAllCategories(settings) {
+    return [...getCategories(settings).map(cat => cat.name), 'Other'];
 }
 
-/** ========== DO NOT MODIFY THE FOLLOWING UNLESS YOU ARE A DEVELOPER ========== **/
+// Returns Map category name -> icon name, containing only categories that
+// have an explicit custom icon set (via a custom-categories entry, either
+// a new category or one overriding a default's icon). Categories with no
+// entry here should fall back to their own built-in default icon.
+export function getCategoryIconMap(settings) {
+    const map = new Map();
+    for (const category of getCategories(settings)) {
+        if (category.icon) {
+            map.set(category.name, category.icon);
+        }
+    }
+    return map;
+}
 
 // app-category-overrides use appId::category::index encoding. These helpers
 // centralize parse/format logic.
@@ -308,8 +267,8 @@ function _removeOverrideEntriesForApp(arr, appId) {
     return arr.filter(e => !e.startsWith(appId + '::'));
 }
 
-function _loadOverrides() {
-    const arr = _getSettingsStrvLocal('app-category-overrides', []);
+function _loadOverrides(settings) {
+    const arr = getSettingsStrv(settings, 'app-category-overrides', []);
     // Map of appId -> { category: string, index: number|null }
     const map = new Map();
     for (const entry of arr) {
@@ -325,8 +284,7 @@ function _loadOverrides() {
     return map;
 }
 
-export function setAppCategory(appId, category, index = null) {
-    const settings = _getSettings();
+export function setAppCategory(settings, appId, category, index = null) {
     if (!settings) {
         return false;
     }
@@ -391,8 +349,7 @@ export function setAppCategory(appId, category, index = null) {
     }
 }
 
-export function clearAppCategory(appId) {
-    const settings = _getSettings();
+export function clearAppCategory(settings, appId) {
     if (!settings) {
         return false;
     }
@@ -412,8 +369,7 @@ export function clearAppCategory(appId) {
  * Write explicit indexes for every app in a category so the order is
  * consistent after drag-and-drop reordering.
  */
-export function setCategoryOrder(category, orderedAppIds) {
-    const settings = _getSettings();
+export function setCategoryOrder(settings, category, orderedAppIds) {
     if (!settings) {
         return false;
     }
@@ -453,9 +409,9 @@ export function setCategoryOrder(category, orderedAppIds) {
     }
 }
 
-export function getCategoryOrderMap() {
+export function getCategoryOrderMap(settings) {
     // Returns Map category -> array of appIds sorted by index (asc)
-    const overrides = _getSettingsStrvLocal('app-category-overrides', []);
+    const overrides = getSettingsStrv(settings, 'app-category-overrides', []);
     const buckets = new Map();
     for (const entry of overrides) {
         const parsed = _parseOverrideEntry(entry);
@@ -487,18 +443,17 @@ function _isValidTargetCategory(currentCategories, name) {
 
 /**
  * Precompute the pieces getAppCategory() needs - the merged category list
- * and the override map - once. getAppCategory() calls this itself if no
- * context is passed, but a caller classifying many apps in a loop (e.g.
- * appDisplay.js building the whole grid) should call this once up front
- * and pass the same context into every getAppCategory() call, rather than
- * each of those calls independently re-reading and re-parsing settings
- * (custom-categories, app-category-overrides) for what is, within a single
- * pass, always the same result.
+ * and the override map - once. A caller classifying many apps in a loop
+ * (e.g. appDisplay.js building the whole grid) should call this once up
+ * front and pass the same context into every getAppCategory() call, rather
+ * than each of those calls independently re-reading and re-parsing
+ * settings (custom-categories, app-category-overrides) for what is, within
+ * a single pass, always the same result.
  */
-export function getCategoryContext() {
+export function getCategoryContext(settings) {
     return {
-        categories: getCategories(),
-        overrides: _loadOverrides()
+        categories: getCategories(settings),
+        overrides: _loadOverrides(settings)
     };
 }
 
@@ -507,9 +462,9 @@ export function getCategoryContext() {
  * category validation. Pass a context from getCategoryContext() when
  * classifying many apps in one pass to avoid redundant settings reads.
  */
-export function getAppCategory(appInfo, context = null) {
+export function getAppCategory(appInfo, context) {
     try {
-        const currentCategories = context ? context.categories : getCategories();
+        const currentCategories = context.categories;
 
         const resolve = candidate =>
             _isValidTargetCategory(currentCategories, candidate) ? candidate : 'Other';
@@ -518,7 +473,7 @@ export function getAppCategory(appInfo, context = null) {
         // category), but validate them against current enabled/merged category config.
         try {
             const id = appInfo.get_id();
-            const overrides = context ? context.overrides : _loadOverrides();
+            const overrides = context.overrides;
             if (overrides.has(id)) {
                 const overrideCategory = overrides.get(id).category;
                 const catConfig = currentCategories.find(c => _categoryNamesEqual(c.name, overrideCategory));
