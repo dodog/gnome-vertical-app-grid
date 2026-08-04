@@ -1,0 +1,24 @@
+name: Validate GNOME Extension
+on: [push, pull_request]
+
+jobs:
+  eslint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install ESLint
+        run: npm install eslint@^8.0.0
+      - name: Lint with GJS rules
+        run: npx eslint .
+
+  ego-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch ego-lint
+        uses: actions/checkout@v4
+        with:
+          repository: ZviBaratz/gnome-extension-reviewer
+          path: .ego-lint
+      - name: Run EGO compliance checks
+        run: .ego-lint/ego-lint . --report
