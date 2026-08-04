@@ -6,8 +6,9 @@ Simple, fixed-column grid layout manager. Every viewport in the vertical
 app grid (favorites, "All Apps", and each category section) gets its own
 instance of this.
 */
-export const VerticalLayout = GObject.registerClass(
-    class VerticalLayout extends Clutter.LayoutManager {
+export const VerticalLayout = GObject.registerClass({
+    GTypeName: 'Vertigrid_VerticalLayout'
+}, class VerticalLayout extends Clutter.LayoutManager {
         _init(settings) {
             super._init();
 

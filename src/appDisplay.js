@@ -80,8 +80,9 @@ function easeOutCubic(t) {
     return (--t) * t * t + 1;
 }
 
-export const VerticalAppDisplay = GObject.registerClass(
-    class VerticalAppDisplay extends St.Widget {
+export const VerticalAppDisplay = GObject.registerClass({
+    GTypeName: 'Vertigrid_VerticalAppDisplay'
+}, class VerticalAppDisplay extends St.Widget {
         // Main custom app grid widget shown in the GNOME overview.
         _init(settings) {
             this._settings = settings;
@@ -212,7 +213,7 @@ export const VerticalAppDisplay = GObject.registerClass(
             });
 
             // Update layout when settings change
-            this._settings.connectObject('changed', (_, key) => {
+            this._settings.connectObject('changed', (_source, key) => {
                 switch (key) {
                     case 'app-sorting':
                     case 'favorites-section':
@@ -222,16 +223,20 @@ export const VerticalAppDisplay = GObject.registerClass(
                     case 'category-font-size':
                     case 'custom-categories':
                     case 'clip-app-labels':
-                        return this._redisplay();
+                        this._redisplay();
+                        break;
 
                     case 'icon-spacing':
-                        return this._updateLabelMargins();
+                        this._updateLabelMargins();
+                        break;
 
                     case 'icon-size':
-                        return this._updateIconSize();
+                        this._updateIconSize();
+                        break;
 
                     case 'always-show-category-nav':
-                        return this._updateNavAlwaysVisible();
+                        this._updateNavAlwaysVisible();
+                        break;
                 }
             }, this);
 
@@ -760,7 +765,7 @@ export const VerticalAppDisplay = GObject.registerClass(
             // Fix flicker through categories the scroll
             this._suppressScrollActiveUpdate = true;
             if (this._suppressScrollActiveUpdateTimeoutId) {
-                GLib.source_remove(this._suppressScrollActiveUpdateTimeoutId);
+                GLib.Source.remove(this._suppressScrollActiveUpdateTimeoutId);
             }
             this._suppressScrollActiveUpdateTimeoutId = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 220, () => {
                 this._suppressScrollActiveUpdate = false;
@@ -1069,7 +1074,7 @@ export const VerticalAppDisplay = GObject.registerClass(
                         this._addAppIcons();
                         this._updateLabelMargins();
                     } catch (e) {
-                        logError(e, 'vertigrid: redisplay failed');
+                        console.error(e, 'vertigrid: redisplay failed');
                     } finally {
                         this._animateRedisplay();
                     }
@@ -1256,9 +1261,7 @@ export const VerticalAppDisplay = GObject.registerClass(
             try {
                 // Ensure any previous drag state is cleared
                 if (this._dragGhost) {
-                    try {
-                        global.stage.remove_child(this._dragGhost);
-                    } catch (e) {}
+                    this._dragGhost.destroy();
                     this._dragGhost = null;
                 }
 
@@ -1373,7 +1376,7 @@ export const VerticalAppDisplay = GObject.registerClass(
                                 this._redisplay();
                             }
                         } catch (e) {
-                            log(`vertigrid: release handler exception=${e}`);
+                            console.debug(`vertigrid: release handler exception=${e}`);
                         }
 
                         try {
@@ -1382,9 +1385,7 @@ export const VerticalAppDisplay = GObject.registerClass(
                         this._dragCapturedHandler = null;
 
                         if (this._dragGhost) {
-                            try {
-                                global.stage.remove_child(this._dragGhost);
-                            } catch (e) {}
+                            this._dragGhost.destroy();
                             this._dragGhost = null;
                         }
 
@@ -1420,7 +1421,7 @@ export const VerticalAppDisplay = GObject.registerClass(
                 this._dragCapturedHandler = null;
             }
             if (this._dragGhost) {
-                global.stage.remove_child(this._dragGhost);
+                this._dragGhost.destroy();
                 this._dragGhost = null;
             }
             if (this._highlightedView) {
@@ -1644,7 +1645,7 @@ export const VerticalAppDisplay = GObject.registerClass(
             this._cancelNavAnimation();
 
             if (this._suppressScrollActiveUpdateTimeoutId) {
-                GLib.source_remove(this._suppressScrollActiveUpdateTimeoutId);
+                GLib.Source.remove(this._suppressScrollActiveUpdateTimeoutId);
                 this._suppressScrollActiveUpdateTimeoutId = null;
             }
 

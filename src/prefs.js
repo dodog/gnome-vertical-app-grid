@@ -291,16 +291,6 @@ export default class VertiGridPreferences extends ExtensionPreferences {
                 });
             });
 
-            if (removeBtn) {
-                removeBtn.connect('clicked', () => {
-                    const idx = rows.indexOf(rowEntry);
-                    if (idx >= 0) {
-                        rows.splice(idx, 1);
-                    }
-                    listBox.remove(row);
-                });
-            }
-
             const rowEntry = {
                 nameEntry,
                 enabledSwitch,
@@ -313,6 +303,16 @@ export default class VertiGridPreferences extends ExtensionPreferences {
                 canonicalName: name
             };
             rows.push(rowEntry);
+
+            if (removeBtn) {
+                removeBtn.connect('clicked', () => {
+                    const idx = rows.indexOf(rowEntry);
+                    if (idx >= 0) {
+                        rows.splice(idx, 1);
+                    }
+                    listBox.remove(row);
+                });
+            }
 
             if (insertAtTop) {
                 listBox.insert(row, 0);
@@ -666,7 +666,7 @@ export default class VertiGridPreferences extends ExtensionPreferences {
         // (enable/disable, merge) the standard categories too, not just ones he added.
         const merged = DEFAULT_CATEGORIES.map(c => ({
             name: c.name,
-            enabled: c.hasOwnProperty('enabled') ? Boolean(c.enabled) : true,
+            enabled: Object.hasOwn(c, 'enabled') ? Boolean(c.enabled) : true,
             merge: (c.merge && c.merge !== false) ? String(c.merge) : false,
             order: null,
             icon: null,
@@ -684,7 +684,7 @@ export default class VertiGridPreferences extends ExtensionPreferences {
                         const orderValue = Number(c.order);
                         return {
                             name: String(c.name),
-                            enabled: c.hasOwnProperty('enabled') ? Boolean(c.enabled) : true,
+                            enabled: Object.hasOwn(c, 'enabled') ? Boolean(c.enabled) : true,
                             merge: (c.merge && c.merge !== false) ? String(c.merge) : false,
                             order: Number.isFinite(orderValue) ? orderValue : null,
                             icon: c.icon ? String(c.icon) : null,
@@ -693,7 +693,7 @@ export default class VertiGridPreferences extends ExtensionPreferences {
                     });
             }
         } catch (e) {
-            log(`vertigrid: Failed to parse custom categories: ${e}`);
+            console.debug(`vertigrid: Failed to parse custom categories: ${e}`);
         }
 
         // Any stored entry overrides a default with the same name

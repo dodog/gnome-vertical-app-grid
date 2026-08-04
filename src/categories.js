@@ -20,7 +20,7 @@ export function getSettingsString(settings, key, fallback = '') {
     try {
         return settings.get_string(key) || fallback;
     } catch (e) {
-        log(`vertigrid: Failed to read ${key}: ${e}`);
+        console.debug(`vertigrid: Failed to read ${key}: ${e}`);
         return fallback;
     }
 }
@@ -33,7 +33,7 @@ export function getSettingsStrv(settings, key, fallback = []) {
     try {
         return settings.get_strv(key) || fallback;
     } catch (e) {
-        log(`vertigrid: Failed to read ${key}: ${e}`);
+        console.debug(`vertigrid: Failed to read ${key}: ${e}`);
         return fallback;
     }
 }
@@ -124,12 +124,12 @@ function _normalizeCategory(category, defaultOrder) {
     }
 
     let enabled = true;
-    if (category.hasOwnProperty('enabled')) {
+    if (Object.hasOwn(category, 'enabled')) {
         enabled = Boolean(category.enabled);
     }
 
     let merge = false;
-    if (category.hasOwnProperty('merge')) {
+    if (Object.hasOwn(category, 'merge')) {
         if (category.merge === false || category.merge === null) {
             merge = false;
         } else {
@@ -144,7 +144,7 @@ function _normalizeCategory(category, defaultOrder) {
     const order = Number.isFinite(orderValue) ? orderValue : null;
 
     let icon = null;
-    if (category.hasOwnProperty('icon')) {
+    if (Object.hasOwn(category, 'icon')) {
         const trimmedIcon = category.icon ? String(category.icon).trim() : '';
         icon = trimmedIcon || null;
     }
@@ -172,7 +172,7 @@ function _loadCustomCategories(settings) {
             .map((category, index) => _normalizeCategory(category, DEFAULT_CATEGORIES.length + index))
             .filter(Boolean);
     } catch (e) {
-        log(`vertigrid: Failed to parse custom categories: ${e}`);
+        console.debug(`vertigrid: Failed to parse custom categories: ${e}`);
         return [];
     }
 }
@@ -344,7 +344,7 @@ export function setAppCategory(settings, appId, category, index = null) {
         settings.set_strv('app-category-overrides', result.map(entry => _encodeOverrideEntry(entry.id, entry.category, entry.index)));
         return true;
     } catch (e) {
-        log(`vertigrid: Failed to set app category override: ${e}`);
+        console.debug(`vertigrid: Failed to set app category override: ${e}`);
         return false;
     }
 }
@@ -360,7 +360,7 @@ export function clearAppCategory(settings, appId) {
         settings.set_strv('app-category-overrides', filtered);
         return true;
     } catch (e) {
-        log(`vertigrid: Failed to clear app category override: ${e}`);
+        console.debug(`vertigrid: Failed to clear app category override: ${e}`);
         return false;
     }
 }
@@ -404,7 +404,7 @@ export function setCategoryOrder(settings, category, orderedAppIds) {
         settings.set_strv('app-category-overrides', overrides.map(entry => _encodeOverrideEntry(entry.id, entry.category, entry.index)));
         return true;
     } catch (e) {
-        log(`vertigrid: Failed to set category order: ${e}`);
+        console.debug(`vertigrid: Failed to set category order: ${e}`);
         return false;
     }
 }

@@ -11,8 +11,9 @@ function easeOutCubic(t) {
 Custom scroll view with animated scrolling and precise child targeting.
 Used as the single scrolling container for the whole vertical app grid.
 */
-export const VerticalScrollView = GObject.registerClass(
-    class VerticalScrollView extends St.ScrollView {
+export const VerticalScrollView = GObject.registerClass({
+    GTypeName: 'Vertigrid_VerticalScrollView'
+}, class VerticalScrollView extends St.ScrollView {
         _init(settings) {
             super._init({
                 hscrollbar_policy: St.PolicyType.NEVER,

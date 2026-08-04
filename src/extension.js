@@ -129,7 +129,7 @@ export default class VerticalAppGridExtension extends Extension {
 
         this._stopOverviewReadyPoll = () => {
             if (this._overviewReadyPollId !== null) {
-                GLib.source_remove(this._overviewReadyPollId);
+                GLib.Source.remove(this._overviewReadyPollId);
                 this._overviewReadyPollId = null;
             }
         };
@@ -203,7 +203,7 @@ export default class VerticalAppGridExtension extends Extension {
             if (!extension._settings.get_boolean('show-workspaces')) {
                 const activePage = this._searchController.searchActive ? ViewPage.SEARCH :
                     (this._appDisplay.visible ? ViewPage.APPS : ViewPage.WINDOWS);
-                const dashVisible = activePage == ViewPage.WINDOWS || activePage == ViewPage.APPS;
+                const dashVisible = activePage === ViewPage.WINDOWS || activePage === ViewPage.APPS;
                 const thumbnailsVisible = false;
 
                 if (dashVisible) {
@@ -219,7 +219,7 @@ export default class VerticalAppGridExtension extends Extension {
                 }
 
                 if (this._dashSpacer) {
-                    this._dashSpacer.visible = activePage == ViewPage.WINDOWS;
+                    this._dashSpacer.visible = activePage === ViewPage.WINDOWS;
                 }
 
                 return;
@@ -297,7 +297,7 @@ export default class VerticalAppGridExtension extends Extension {
     // Cleanup all injected state and restore original Shell behavior.
     disable() {
         if (this._overviewReadyPollId !== null) {
-            GLib.source_remove(this._overviewReadyPollId);
+            GLib.Source.remove(this._overviewReadyPollId);
             this._overviewReadyPollId = null;
         }
 
@@ -323,7 +323,7 @@ export default class VerticalAppGridExtension extends Extension {
                 this._overviewControls.appDisplay._connectDnD();
             }
         } catch (e) {
-            log(`vertigrid: Error during core teardown: ${e}`);
+            console.debug(`vertigrid: Error during core teardown: ${e}`);
         }
 
         // Disconnect settings signal and restore workspace visibility before clearing
