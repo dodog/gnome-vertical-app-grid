@@ -984,7 +984,9 @@ export const VerticalAppDisplay = GObject.registerClass({
                     } else {
                         appsByCategory['Other'].push(appInfo);
                     }
-                } catch {}
+                } catch (e) {
+                    // Skip apps that error out during category classification.
+                }
             });
 
             // Sort apps within each category
