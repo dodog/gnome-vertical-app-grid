@@ -118,7 +118,7 @@ export const VerticalAppDisplay = GObject.registerClass({
             this._scrollView.add_child(this._mainView);
 
             this._navBox = new St.BoxLayout({
-                vertical: true,
+                orientation: Clutter.Orientation.VERTICAL,
                 x_expand: false,
                 y_expand: false,
                 y_align: Clutter.ActorAlign.CENTER,
@@ -136,7 +136,7 @@ export const VerticalAppDisplay = GObject.registerClass({
             this._navCollapsed = !this._navAlwaysVisible;
 
             this._mainBox = new St.BoxLayout({
-                vertical: false,
+                orientation: Clutter.Orientation.HORIZONTAL,
                 x_expand: true,
                 y_expand: true
             });
@@ -260,7 +260,7 @@ export const VerticalAppDisplay = GObject.registerClass({
 
         _createSectionHeader(text) {
             const row = new St.BoxLayout({
-                vertical: false,
+                orientation: Clutter.Orientation.HORIZONTAL,
                 x_expand: true,
                 y_expand: false,
                 y_align: Clutter.ActorAlign.CENTER
@@ -643,7 +643,7 @@ export const VerticalAppDisplay = GObject.registerClass({
                 button._categoryId = item.id;
 
                 const categoryRow = new St.BoxLayout({
-                    vertical: false,
+                    orientation: Clutter.Orientation.HORIZONTAL,
                     x_expand: true,
                     y_expand: false,
                     y_align: Clutter.ActorAlign.CENTER,

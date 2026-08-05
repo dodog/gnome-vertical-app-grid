@@ -32,7 +32,7 @@ export const VerticalScrollView = GObject.registerClass({
             this._trackpadTime = 0;
 
             const box = new St.BoxLayout({
-                vertical: true,
+                orientation: Clutter.Orientation.VERTICAL,
                 x_expand: false,
                 y_expand: false
             });
