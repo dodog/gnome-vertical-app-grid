@@ -85,16 +85,16 @@ export const VerticalAppDisplay = GObject.registerClass({
     GTypeName: 'Vertigrid_VerticalAppDisplay'
 }, class VerticalAppDisplay extends St.Widget {
         // Main custom app grid widget shown in the GNOME overview.
-        _init(settings) {
-            this._settings = settings;
-            this._laters = global.compositor.get_laters();
-
-            super._init({
+        constructor(settings) {
+            super({
                 layout_manager: new Clutter.BinLayout(),
                 can_focus: true,
                 reactive: true,
                 accessible_role: Atk.Role.LIST
             });
+
+            this._settings = settings;
+            this._laters = global.compositor.get_laters();
 
             this._favoritesLabel = this._createSectionHeader(_('Favorites'));
 
