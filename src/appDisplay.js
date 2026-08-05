@@ -1397,7 +1397,7 @@ export const VerticalAppDisplay = GObject.registerClass({
 
                                 try {
                                     setCategoryOrder(this._settings, cat, withoutDragged);
-                                } catch (e) {
+                                } catch {
                                     setAppCategory(this._settings, src._appId, cat);
                                 }
 

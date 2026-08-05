@@ -501,7 +501,7 @@ export function getAppCategory(appInfo, context) {
                 // to natural detection via the app's own .desktop
                 // Categories= below instead of stranding it in Other.
             }
-        } catch (e) {
+        } catch {
             // ignore if appInfo doesn't have get_id
         }
         const categories = appInfo.get_categories();
