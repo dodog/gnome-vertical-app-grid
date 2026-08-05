@@ -344,7 +344,7 @@ export const VerticalAppDisplay = GObject.registerClass({
             this._appSystem.get_installed().forEach(appInfo => {
                 try {
                     ids.add(appInfo.get_id());
-                } catch (e) {
+                } catch {
                     // Skip apps whose id can't be read rather than fail the whole scan.
                 }
             });
@@ -518,7 +518,7 @@ export const VerticalAppDisplay = GObject.registerClass({
                         }
 
                         mainAppInfos.push(appInfo);
-                    } catch (e) {
+                    } catch {
                         // Skip apps that error out during filtering/lookup.
                     }
                 });
@@ -748,7 +748,7 @@ export const VerticalAppDisplay = GObject.registerClass({
 
             try {
                 button._icon.set_opacity(opacity);
-            } catch (e) {
+            } catch {
                 // Actor may have been disposed mid-teardown; nothing to do.
             }
         }
@@ -830,7 +830,7 @@ export const VerticalAppDisplay = GObject.registerClass({
             try {
                 startHeight = first.height;
                 startOpacity = first._label ? first._label.opacity : targetOpacity;
-            } catch (e) {
+            } catch {
                 // Actor may have been disposed mid-teardown; bail out rather
                 // than crash - the nav will simply skip this animation.
                 return;
@@ -982,7 +982,7 @@ export const VerticalAppDisplay = GObject.registerClass({
                     } else {
                         appsByCategory['Other'].push(appInfo);
                     }
-                } catch (e) {
+                } catch {
                     // Skip apps that error out during category classification.
                 }
             });
@@ -1145,7 +1145,7 @@ export const VerticalAppDisplay = GObject.registerClass({
                     if (p.length >= 3) return [Math.floor(p[1]), Math.floor(p[2])];
                     return [Math.floor(p[0]), Math.floor(p[1])];
                 }
-            } catch (e) {
+            } catch {
                 // Fall through to the [0, 0] default below.
             }
 
@@ -1181,7 +1181,7 @@ export const VerticalAppDisplay = GObject.registerClass({
                 let bounds = null;
                 try {
                     bounds = view.get_allocation_box();
-                } catch (e) {
+                } catch {
                     // View may not be allocated yet; bounds stays null.
                 }
 
@@ -1215,7 +1215,7 @@ export const VerticalAppDisplay = GObject.registerClass({
                             let labelBox = null;
                             try {
                                 labelBox = label.get_allocation_box();
-                            } catch (e) {
+                            } catch {
                                 // Label may not be allocated yet; labelBox stays null.
                             }
 
@@ -1244,7 +1244,7 @@ export const VerticalAppDisplay = GObject.registerClass({
                                         }
                                     }
                                 }
-                            } catch (e) {
+                            } catch {
                                 // Couldn't read the next category's position;
                                 // fall back to the default dropPadding above.
                             }
@@ -1262,7 +1262,7 @@ export const VerticalAppDisplay = GObject.registerClass({
                             }
                         }
                     }
-                } catch (e) {
+                } catch {
                     // Empty-category drop-zone expansion is best-effort;
                     // skip it for this category on failure.
                 }
@@ -1291,12 +1291,12 @@ export const VerticalAppDisplay = GObject.registerClass({
                     this._dragGhost.set_scale(0.9, 0.9);
                     try {
                         this._dragGhost.set_reactive(false);
-                    } catch (e) {
+                    } catch {
                         // Not critical if this fails; the ghost just stays reactive.
                     }
                     global.stage.add_child(this._dragGhost);
                     this._dragGhost.raise_top();
-                } catch (e) {
+                } catch {
                     // Ghost creation is best-effort; a failure here just
                     // means no visual clone follows the pointer.
                 }
@@ -1306,7 +1306,7 @@ export const VerticalAppDisplay = GObject.registerClass({
                 if (this._dragCapturedHandler) {
                     try {
                         global.stage.disconnect(this._dragCapturedHandler);
-                    } catch (e) {
+                    } catch {
                         // Already disconnected; nothing to do.
                     }
                     this._dragCapturedHandler = null;
@@ -1335,17 +1335,17 @@ export const VerticalAppDisplay = GObject.registerClass({
                             if (foundView !== this._highlightedView) {
                                 try {
                                     if (this._highlightedView) this._highlightedView.set_style('');
-                                } catch (e) {
+                                } catch {
                                     // View may have been disposed mid-drag; nothing to do.
                                 }
                                 this._highlightedView = foundView;
                                 try {
                                     if (this._highlightedView) this._highlightedView.set_style('box-shadow: inset 0 0 0 2px rgba(255,255,255,0.08); background-color: rgba(255,255,255,0.02);');
-                                } catch (e) {
+                                } catch {
                                     // View may have been disposed mid-drag; nothing to do.
                                 }
                             }
-                        } catch (e) {
+                        } catch {
                             // Motion handling is best-effort per frame; skip
                             // this frame rather than crash the pointer grab.
                         }
@@ -1409,7 +1409,7 @@ export const VerticalAppDisplay = GObject.registerClass({
 
                         try {
                             global.stage.disconnect(this._dragCapturedHandler);
-                        } catch (e) {
+                        } catch {
                             // Already disconnected; nothing to do.
                         }
                         this._dragCapturedHandler = null;
@@ -1429,7 +1429,7 @@ export const VerticalAppDisplay = GObject.registerClass({
 
                     return Clutter.EVENT_PROPAGATE;
                 });
-            } catch (e) {
+            } catch {
                 // Starting a drag is best-effort; a failure here just means
                 // this particular drag gesture doesn't begin.
             }
@@ -1513,7 +1513,7 @@ export const VerticalAppDisplay = GObject.registerClass({
                 } else {
                     label = this._findLabelActor(appIcon);
                 }
-            } catch (e) {
+            } catch {
                 // Icon internals vary by AppIcon implementation; leave
                 // label null and fall through to the guard below.
             }
@@ -1527,7 +1527,7 @@ export const VerticalAppDisplay = GObject.registerClass({
                 clutterText.set_single_line_mode(false);
                 clutterText.ellipsize = Pango.EllipsizeMode.END;
                 label.set_style('text-align: center;');
-            } catch (e) {
+            } catch {
                 // Label may have been disposed; nothing to do.
             }
         }
@@ -1577,7 +1577,7 @@ export const VerticalAppDisplay = GObject.registerClass({
                                 this._cancelPendingDrag();
                                 this._startDrag(actor);
                             }
-                        } catch (e) {
+                        } catch {
                             // Motion handling is best-effort per frame; skip
                             // this frame rather than crash the pointer grab.
                         }
@@ -1589,7 +1589,7 @@ export const VerticalAppDisplay = GObject.registerClass({
                         this._cancelPendingDrag();
                         return Clutter.EVENT_PROPAGATE;
                     });
-                } catch (e) {
+                } catch {
                     // Setting up the pending-drag watch is best-effort; a
                     // failure here just means this press doesn't start one.
                 }
@@ -1710,7 +1710,7 @@ export const VerticalAppDisplay = GObject.registerClass({
             for (const appIcon of this._appIcons) {
                 try {
                     appIcon.destroy();
-                } catch (e) {
+                } catch {
                     // AppDisplay.AppIcon is a Shell-internal class; guard
                     // against it already being torn down by the actor tree
                     // destroy below rather than assume it's always safe.
