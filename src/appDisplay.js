@@ -587,10 +587,8 @@ export const VerticalAppDisplay = GObject.registerClass({
 
             // Extra space after the last section so it can be scrolled
             // further up rather than stopping flush with the bottom edge.
-            if (this._bottomSpacer) {
-                this._bottomSpacer.destroy();
-                this._bottomSpacer = null;
-            }
+            this._bottomSpacer?.destroy();
+            this._bottomSpacer = null;
 
             this._bottomSpacer = new St.Widget({
                 x_expand: true
@@ -1064,10 +1062,8 @@ export const VerticalAppDisplay = GObject.registerClass({
 
                         // Clean up category views if they exist
                         for (const category in this._categoryLabels) {
-                            if (this._categoryLabels[category]) {
-                                this._categoryLabels[category].destroy();
-                                this._categoryLabels[category] = null;
-                            }
+                            this._categoryLabels[category]?.destroy();
+                            this._categoryLabels[category] = null;
                         }
                         for (const category in this._categoryViews) {
                             if (this._categoryViews[category]) {
@@ -1280,10 +1276,8 @@ export const VerticalAppDisplay = GObject.registerClass({
         _startDrag(actor) {
             try {
                 // Ensure any previous drag state is cleared
-                if (this._dragGhost) {
-                    this._dragGhost.destroy();
-                    this._dragGhost = null;
-                }
+                this._dragGhost?.destroy();
+                this._dragGhost = null;
 
                 this._dragActor = actor;
                 actor._dragging = true;
@@ -1420,10 +1414,8 @@ export const VerticalAppDisplay = GObject.registerClass({
                         }
                         this._dragCapturedHandler = null;
 
-                        if (this._dragGhost) {
-                            this._dragGhost.destroy();
-                            this._dragGhost = null;
-                        }
+                        this._dragGhost?.destroy();
+                        this._dragGhost = null;
 
                         this._dragActor = null;
                         // Consume the release too - this is the critical part:
@@ -1459,10 +1451,8 @@ export const VerticalAppDisplay = GObject.registerClass({
                 global.stage.disconnect(this._dragCapturedHandler);
                 this._dragCapturedHandler = null;
             }
-            if (this._dragGhost) {
-                this._dragGhost.destroy();
-                this._dragGhost = null;
-            }
+            this._dragGhost?.destroy();
+            this._dragGhost = null;
             if (this._highlightedView) {
                 this._highlightedView.set_style('');
                 this._highlightedView = null;
