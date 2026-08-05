@@ -9,8 +9,8 @@ instance of this.
 export const VerticalLayout = GObject.registerClass({
     GTypeName: 'Vertigrid_VerticalLayout'
 }, class VerticalLayout extends Clutter.LayoutManager {
-        _init(settings) {
-            super._init();
+        constructor(settings) {
+            super();
 
             this._settings = settings;
 
