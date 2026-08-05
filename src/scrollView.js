@@ -14,8 +14,8 @@ Used as the single scrolling container for the whole vertical app grid.
 export const VerticalScrollView = GObject.registerClass({
     GTypeName: 'Vertigrid_VerticalScrollView'
 }, class VerticalScrollView extends St.ScrollView {
-        _init(settings) {
-            super._init({
+        constructor(settings) {
+            super({
                 hscrollbar_policy: St.PolicyType.NEVER,
                 vscrollbar_policy: St.PolicyType.NEVER
             });
