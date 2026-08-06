@@ -1276,8 +1276,10 @@ export const VerticalAppDisplay = GObject.registerClass({
         _startDrag(actor) {
             try {
                 // Ensure any previous drag state is cleared
-                this._dragGhost?.destroy();
-                this._dragGhost = null;
+                if (this._dragGhost) {
+                    this._dragGhost.destroy();
+                    this._dragGhost = null;
+                }
 
                 this._dragActor = actor;
                 actor._dragging = true;
@@ -1414,8 +1416,10 @@ export const VerticalAppDisplay = GObject.registerClass({
                         }
                         this._dragCapturedHandler = null;
 
-                        this._dragGhost?.destroy();
-                        this._dragGhost = null;
+                        if (this._dragGhost) {
+                            this._dragGhost.destroy();
+                            this._dragGhost = null;
+                        }
 
                         this._dragActor = null;
                         // Consume the release too - this is the critical part:
@@ -1451,8 +1455,10 @@ export const VerticalAppDisplay = GObject.registerClass({
                 global.stage.disconnect(this._dragCapturedHandler);
                 this._dragCapturedHandler = null;
             }
-            this._dragGhost?.destroy();
-            this._dragGhost = null;
+            if (this._dragGhost) {
+                this._dragGhost.destroy();
+                this._dragGhost = null;
+            }
             if (this._highlightedView) {
                 this._highlightedView.set_style('');
                 this._highlightedView = null;
