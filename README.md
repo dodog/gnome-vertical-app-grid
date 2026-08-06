@@ -6,7 +6,7 @@
 [![Licence](https://img.shields.io/badge/license-GPL--3.0-green)](https://www.gnu.org/licenses/gpl-3.0.html)
 
 <img width="64" height="64" alt="vertigrid-logo" src="https://github.com/user-attachments/assets/33f8ed35-3e39-4f06-8457-b21fc2eaadc1" align="left"/>
-VertiGrid is a GNOME Shell extension that replaces the default horizontal app grid with a vertical app grid in the overview. It adds category grouping, navigation, smooth scrolling, workspace visibility control, and layout customization for a cleaner overview experience.
+**VertiGrid** is a GNOME Shell extension that replaces the default horizontal app grid menu with a vertical app menu in the overview. It adds category grouping, navigation, smooth scrolling, workspace visibility control, and layout customization for a cleaner overview experience.
 
 * * *
 
