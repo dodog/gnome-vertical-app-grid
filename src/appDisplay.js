@@ -1066,11 +1066,9 @@ export const VerticalAppDisplay = GObject.registerClass({
                             this._categoryLabels[category] = null;
                         }
                         for (const category in this._categoryViews) {
-                            if (this._categoryViews[category]) {
-                                this._destroyViewportLayout(this._categoryViews[category]);
-                                this._categoryViews[category].destroy();
-                                this._categoryViews[category] = null;
-                            }
+                            this._destroyViewportLayout(this._categoryViews[category]);
+                            this._categoryViews[category]?.destroy();
+                            this._categoryViews[category] = null;
                         }
                         this._categoryLabels = {};
                         this._categoryViews = {};
