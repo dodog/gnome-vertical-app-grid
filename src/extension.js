@@ -54,6 +54,11 @@ export default class VerticalAppGridExtension extends Extension {
                 controls.add_child(this._vertAppDisplay);
             }
 
+            // Re-orders the layers so app grid is placed below the workspaces view
+            if (controls._workspacesDisplay) {
+                controls.set_child_below_sibling(this._vertAppDisplay, controls._workspacesDisplay);
+            }
+
             this._overviewControls = controls;
             this._overviewLayoutManager = controls.layout_manager;
 
@@ -108,6 +113,21 @@ export default class VerticalAppGridExtension extends Extension {
                 return appDisplayBox;
             });
 
+            // Instead of hiding or collapsing it, keep it at valid size and move it off-screen
+            this._injectionManager.overrideMethod(layoutManagerProto, '_computeWorkspacesBoxForState', originalFn => function(state, box, searchHeight, dashHeight, thumbnailsHeight, spacing) {
+                const workspaceBox = originalFn.call(this, state, box, searchHeight, dashHeight, thumbnailsHeight, spacing);
+
+                if (extension._settings.get_boolean('show-workspaces') || state !== OverviewControls.ControlsState.APP_GRID) {
+                    return workspaceBox;
+                }
+
+                const [width, height] = workspaceBox.get_size();
+                workspaceBox.set_origin(0, box.y2);
+                workspaceBox.set_size(width, height);
+
+                return workspaceBox;
+            });
+
             return true;
         };
 
@@ -146,11 +166,8 @@ export default class VerticalAppGridExtension extends Extension {
             });
         };
 
-        // Apply workspace visibility preference. Show or hide the workspace
-        // preview panel based on the extension setting, and force a layout
-        // refresh if needed.
-        this._updateWorkspacesVisibility = (forceShow = false) => {
-            const show = forceShow || this._settings.get_boolean('show-workspaces');
+        // Force the relayout to happen immediately after the setting changes
+        this._updateWorkspacesVisibility = () => {
             const controls = this._overviewControls || this._getOverviewControls();
 
             if (!controls) {
@@ -159,32 +176,11 @@ export default class VerticalAppGridExtension extends Extension {
             }
 
             this._overviewControls = controls;
-            const workspaceDisplay = controls._workspacesDisplay;
-
-            if (!workspaceDisplay) {
-                // Controls exist but haven't finished constructing yet; retry.
-                this._ensureOverviewConnections();
-                return;
-            }
-
-            if (show) {
-                workspaceDisplay.show();
-            } else {
-                workspaceDisplay.hide();
-            }
 
             if (controls.layout_manager) {
                 controls.layout_manager.layout_changed();
             }
             controls.queue_relayout();
-
-            const parent = controls.get_parent();
-            if (parent && parent.layout_manager) {
-                parent.layout_manager.layout_changed();
-            }
-            if (parent) {
-                parent.queue_relayout();
-            }
         };
 
         const ViewPage = {
@@ -339,10 +335,9 @@ export default class VerticalAppGridExtension extends Extension {
 
         this._stopOverviewReadyPoll();
 
-        // Restore workspace visibility when disabling - forceShow=true so
-        // this actually restores them regardless of the current show-workspaces setting.
+        // Nudge the layout to recompute immediately with the override cleared above.
         if (this._updateWorkspacesVisibility) {
-            this._updateWorkspacesVisibility(true);
+            this._updateWorkspacesVisibility();
         }
 
         // Reset so a subsequent enable() (GNOME Shell reuses this same
