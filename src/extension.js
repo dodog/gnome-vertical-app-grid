@@ -183,46 +183,11 @@ export default class VerticalAppGridExtension extends Extension {
             controls.queue_relayout();
         };
 
-        const ViewPage = {
-            WINDOWS: 0,
-            APPS: 1,
-            SEARCH: 2
-        };
-
         // _onOverviewReady() already calls _attachOverviewControls(),
         // _setAppDisplayLayout(), and _installAppDisplayBoxOverride()
         this._ensureOverviewConnections();
         this._onOverviewReady();
         this._startOverviewReadyPoll();
-
-        this._injectionManager.overrideMethod(overviewControlsProto, '_setVisibility', originalFn => function() {
-            if (!extension._settings.get_boolean('show-workspaces')) {
-                const activePage = this._searchController.searchActive ? ViewPage.SEARCH :
-                    (this._appDisplay.visible ? ViewPage.APPS : ViewPage.WINDOWS);
-                const dashVisible = activePage === ViewPage.WINDOWS || activePage === ViewPage.APPS;
-                const thumbnailsVisible = false;
-
-                if (dashVisible) {
-                    this._dashSlider.slideIn();
-                } else {
-                    this._dashSlider.slideOut();
-                }
-
-                if (thumbnailsVisible) {
-                    this._thumbnailsSlider.slideIn();
-                } else {
-                    this._thumbnailsSlider.slideOut();
-                }
-
-                if (this._dashSpacer) {
-                    this._dashSpacer.visible = activePage === ViewPage.WINDOWS;
-                }
-
-                return;
-            }
-
-            originalFn.call(this);
-        });
 
         // Now that controls are set up, connect the settings signal and apply initial state
         this._settingsSignal = this._settings.connect('changed::show-workspaces', () => this._updateWorkspacesVisibility());
