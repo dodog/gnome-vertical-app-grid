@@ -2,7 +2,7 @@
 
 **A vertical app grid for GNOME Shell with category grouping, navigation, and drag-and-drop support.**
 
-[![Gnome extension](https://img.shields.io/badge/GNOME%20Shell-49,%2050-blue)](https://extensions.gnome.org/extension/)
+[![Gnome extension](https://img.shields.io/badge/GNOME%20Shell-48,%2049,%2050-blue)](https://extensions.gnome.org/extension/)
 [![Licence](https://img.shields.io/badge/license-GPL--3.0-green)](https://www.gnu.org/licenses/gpl-3.0.html)
 
 <img width="64" height="64" alt="vertigrid-logo" src="https://github.com/user-attachments/assets/33f8ed35-3e39-4f06-8457-b21fc2eaadc1" align="left"/>
