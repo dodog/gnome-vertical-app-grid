@@ -67,6 +67,12 @@
       <summary>Clip long app names</summary>
       <description>Clip long application names to a single line instead of showing them in full.</description>
     </key>
+
+    <key name="hidden-apps" type="as">
+      <default>[]</default>
+      <summary>Apps hidden from this extension's app grid</summary>
+      <description>List of application IDs (.desktop file names) hidden from this extension's app grid via its right-click menu. Does not affect other launchers, search, or the system app menu.</description>
+    </key>
    
   </schema>
 </schemalist>
