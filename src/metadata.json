@@ -3,6 +3,7 @@
     "name": "VertiGrid",
     "settings-schema": "org.gnome.shell.extensions.vertigrid",
     "shell-version": [
+        "48",
         "49",
         "50"
     ],
