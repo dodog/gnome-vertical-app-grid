@@ -33,7 +33,20 @@ export default class VerticalAppGridExtension extends Extension {
         this._overviewReadyPollId = null;
         this._dndDisconnected = false;
 
-        this._getOverviewControls = () => Main.overview && Main.overview._overview ? Main.overview._overview._controls : null;
+        // Adds an app id to the hidden-apps list (a no-op if it's already
+        // there). Used by the "Hide from App Grid" context menu item below.
+        this._hideApp = appId => {
+            const hidden = this._settings.get_strv('hidden-apps');
+            if (!hidden.includes(appId)) {
+                hidden.push(appId);
+                this._settings.set_strv('hidden-apps', hidden);
+            }
+        };
+
+        // Main.overview._overview.controls is the public getter for the
+        // ControlsManager (OverviewActor.get controls()); Main.overview._overview
+        // itself is still private (Overview never exposes a public path to it).
+        this._getOverviewControls = () => Main.overview && Main.overview._overview ? Main.overview._overview.controls : null;
 
         this._onOverviewReady = () => {
             const attached = this._attachOverviewControls();
@@ -252,6 +265,24 @@ export default class VerticalAppGridExtension extends Extension {
 
                 this._toggleFavoriteItem.label.text = text;
             }
+        });
+
+        // Add a "Hide from App Grid" item to the app right-click menu.
+        // setApp() runs exactly once per per-icon menu instance in normal
+        // use (AppIcon.popupMenu() creates one AppMenu per icon, lazily, and
+        // calls setApp() immediately after
+        this._injectionManager.overrideMethod(AppMenu.AppMenu.prototype, 'setApp', originalFn => function(app) {
+            originalFn.call(this, app);
+
+            if (!this._hideFromGridItem) {
+                this._hideFromGridItem = this.addAction(_('Hide this app'), () => {
+                    if (this._app) {
+                        extension._hideApp(this._app.get_id());
+                    }
+                });
+            }
+
+            this._hideFromGridItem.visible = !!this._app;
         });
     }
 

@@ -225,6 +225,7 @@ export const VerticalAppDisplay = GObject.registerClass({
                     case 'category-font-size':
                     case 'custom-categories':
                     case 'clip-app-labels':
+                    case 'hidden-apps':
                         this._redisplay();
                         break;
 
@@ -367,6 +368,8 @@ export const VerticalAppDisplay = GObject.registerClass({
             const iconSize = this._settings.get_int('icon-size');
             const favSection = this._settings.get_boolean('favorites-section');
             const categoryGrouping = this._settings.get_boolean('category-grouping');
+            // Whether to clip app labels in the grid and expand them on hover. 
+            const clipLabels = this._settings.get_boolean('clip-app-labels');
 
             this._lastInstalledIds = this._getInstalledIdsSet();
 
@@ -404,7 +407,8 @@ export const VerticalAppDisplay = GObject.registerClass({
                         const app = this._appSystem.lookup_app(appId);
                         if (!app) continue;
                         const appIcon = new AppDisplay.AppIcon(app, {
-                            isDraggable: false
+                            isDraggable: false,
+                            expandTitleOnHover: clipLabels
                         });
                         appIcon._appId = app.get_id();
                         this._attachDragHandlers(appIcon);
@@ -435,7 +439,8 @@ export const VerticalAppDisplay = GObject.registerClass({
                         const app = this._appSystem.lookup_app(appId);
                         if (!app) continue;
                         const appIcon = new AppDisplay.AppIcon(app, {
-                            isDraggable: false
+                            isDraggable: false,
+                            expandTitleOnHover: clipLabels
                         });
                         appIcon._appId = app.get_id();
                         // Attach centralized drag handlers
@@ -464,7 +469,8 @@ export const VerticalAppDisplay = GObject.registerClass({
                         const app = this._appSystem.lookup_app(appId);
                         if (!app) continue;
                         const appIcon = new AppDisplay.AppIcon(app, {
-                            isDraggable: false
+                            isDraggable: false,
+                            expandTitleOnHover: clipLabels
                         });
                         appIcon._appId = app.get_id();
                         this._attachDragHandlers(appIcon);
@@ -500,6 +506,7 @@ export const VerticalAppDisplay = GObject.registerClass({
                 const favSorting = this._settings.get_string('favorites-sorting');
                 const appSorting = this._settings.get_string('app-sorting');
                 const favIds = this._appFavorites._getIds();
+                const hiddenApps = new Set(this._settings.get_strv('hidden-apps'));
 
                 const favAppInfos = [];
                 const mainAppInfos = [];
@@ -510,6 +517,10 @@ export const VerticalAppDisplay = GObject.registerClass({
                             return;
 
                         const appId = appInfo.get_id();
+
+                        if (hiddenApps.has(appId))
+                            return;
+
                         const isFav = this._appFavorites.isFavorite(appId);
 
                         if (favSection && isFav) {
@@ -552,7 +563,8 @@ export const VerticalAppDisplay = GObject.registerClass({
                     const app = this._appSystem.lookup_app(appInfo.get_id());
                     if (!app) continue;
                     const appIcon = new AppDisplay.AppIcon(app, {
-                        isDraggable: false
+                        isDraggable: false,
+                        expandTitleOnHover: clipLabels
                     });
                     appIcon.icon.setIconSize(iconSize);
                     appIcon._appId = app.get_id();
@@ -566,7 +578,8 @@ export const VerticalAppDisplay = GObject.registerClass({
                     const app = this._appSystem.lookup_app(appInfo.get_id());
                     if (!app) continue;
                     const appIcon = new AppDisplay.AppIcon(app, {
-                        isDraggable: false
+                        isDraggable: false,
+                        expandTitleOnHover: clipLabels
                     });
                     appIcon.icon.setIconSize(iconSize);
                     appIcon._appId = app.get_id();
@@ -938,6 +951,7 @@ export const VerticalAppDisplay = GObject.registerClass({
             const installedApps = this._appSystem.get_installed();
             const favSection = this._settings.get_boolean('favorites-section');
             const syncFavorites = this._settings.get_boolean('show-favorites-in-app-grid');
+            const hiddenApps = new Set(this._settings.get_strv('hidden-apps'));
 
             // Computed once per pass and reused for every app below - avoids
             // getAppCategory() independently re-reading and re-parsing
@@ -958,6 +972,9 @@ export const VerticalAppDisplay = GObject.registerClass({
                     const appId = appInfo.get_id();
 
                     if (!this._parentalControls.shouldShowApp(appInfo))
+                        return;
+
+                    if (hiddenApps.has(appId))
                         return;
 
                     const isFav = this._appFavorites.isFavorite(appId);
@@ -1537,21 +1554,11 @@ export const VerticalAppDisplay = GObject.registerClass({
         }
 
         _attachDragHandlers(appIcon) {
-            // Respect the "clip long app names" setting: when it's enabled,
-            // leave AppDisplay.AppIcon's stock single-line ellipsized label
-            // behavior (full name only on hover, via its own overlay) alone
-            // instead of forcing the full wrapped name below. Default is
-            // false, matching the previous always-full-name behavior.
+            // If the user has disabled clipping of app labels, force the label to always wrap onto multiple lines instead of being ellipsized to a single line. 
+            // This prevents AppIcon's internal hover/focus-driven single-line <-> wrapped toggling from fighting with the always-wrapped style applied here.
+
             if (!this._settings.get_boolean('clip-app-labels')) {
                 this._showFullAppLabel(appIcon);
-
-                // AppIcon's own built-in hover handling reverts the label back
-                // to a single ellipsized line once the pointer leaves.
-                // Re-apply our override every time hover changes so it always
-                // wins, regardless of what the built-in handler just did.
-                appIcon.connect('notify::hover', () => {
-                    this._showFullAppLabel(appIcon);
-                });
             }
 
             appIcon.reactive = true;
@@ -1649,26 +1656,89 @@ export const VerticalAppDisplay = GObject.registerClass({
         }
 
         _getNavTarget(focused, key) {
-            const index = this._appIcons.indexOf(focused);
-            const last = this._appIcons.length - 1;
+            if (key === Clutter.KEY_Tab || key === Clutter.KEY_ISO_Left_Tab) {
+                const index = this._appIcons.indexOf(focused);
+                const last = this._appIcons.length - 1;
 
-            let targetIndex = index;
+                if (index === -1) {
+                    return key === Clutter.KEY_Tab ? this._appIcons[0] : this._appIcons[last];
+                }
+
+                if (key === Clutter.KEY_Tab) {
+                    return this._appIcons[index < last ? index + 1 : 0];
+                }
+                return this._appIcons[index > 0 ? index - 1 : last];
+            }
+
+            if (key === Clutter.KEY_Right || key === Clutter.KEY_Left ||
+                key === Clutter.KEY_Down || key === Clutter.KEY_Up) {
+                return this._getGridNavTarget(focused, key);
+            }
+
+            // Any other key (Enter/Space to launch, letters for type-ahead,
+            // etc.) isn't ours to handle - return null so the caller lets
+            // it propagate normally instead of re-focusing/consuming it.
+            return null;
+        }
+
+        // Grid navigation: arrow keys move in the obvious direction, wrapping
+        // around to the next/previous section when reaching the end of a row
+        // or column. Up/Down always land on the first icon of the next/prev
+        // section, rather than trying to preserve a column index, so that
+        // Up/Down behave consistently regardless of how many rows/columns
+        // the section you're leaving or entering happens to have.
+        _getGridNavTarget(focused, key) {
+            const index = this._appIcons.indexOf(focused);
 
             if (index === -1) {
-                if (key === Clutter.KEY_Tab) {
-                    targetIndex = 0;
-                } else if (key === Clutter.KEY_ISO_Left_Tab) {
-                    targetIndex = last;
+                if (key === Clutter.KEY_Right || key === Clutter.KEY_Down) {
+                    return this._appIcons[0];
                 }
-            } else {
-                if (key === Clutter.KEY_Tab) {
-                    targetIndex = index < last ? index + 1 : 0;
-                } else if (key === Clutter.KEY_ISO_Left_Tab) {
-                    targetIndex = index > 0 ? index - 1 : last;
+                return this._appIcons[this._appIcons.length - 1];
+            }
+
+            const parentView = focused.get_parent();
+            const layout = parentView && parentView.layout_manager;
+            const columns = (layout && layout._columns) ? layout._columns : 1;
+            const viewChildren = parentView ? parentView.get_children() : [];
+            const localIndex = viewChildren.indexOf(focused);
+            const last = this._appIcons.length - 1;
+
+            if (key === Clutter.KEY_Right || key === Clutter.KEY_Left) {
+                const targetLocalIndex = key === Clutter.KEY_Right ? localIndex + 1 : localIndex - 1;
+                if (localIndex !== -1 && targetLocalIndex >= 0 && targetLocalIndex < viewChildren.length) {
+                    return viewChildren[targetLocalIndex];
+                }
+
+                const forward = key === Clutter.KEY_Right;
+                if (forward) {
+                    return this._appIcons[index < last ? index + 1 : 0];
+                }
+                return this._appIcons[index > 0 ? index - 1 : last];
+            }
+
+            // Up/Down: try moving a full row within the current section's
+            // own grid first.
+            if (localIndex !== -1) {
+                const targetLocalIndex = key === Clutter.KEY_Down ? localIndex + columns : localIndex - columns;
+                if (targetLocalIndex >= 0 && targetLocalIndex < viewChildren.length) {
+                    return viewChildren[targetLocalIndex];
                 }
             }
 
-            return this._appIcons[targetIndex];
+            // If that fails, move to the first icon of the next/previous section instead.
+            if (key === Clutter.KEY_Down) {
+                const lastInView = viewChildren.length > 0 ? viewChildren[viewChildren.length - 1] : focused;
+                const targetIndex = this._appIcons.indexOf(lastInView) + 1;
+                return this._appIcons[targetIndex <= last ? targetIndex : 0];
+            }
+
+            const firstInView = viewChildren.length > 0 ? viewChildren[0] : focused;
+            const prevSectionLastIndex = this._appIcons.indexOf(firstInView) - 1;
+            const prevSectionLastIcon = this._appIcons[prevSectionLastIndex >= 0 ? prevSectionLastIndex : last];
+            const prevView = prevSectionLastIcon.get_parent();
+            const prevViewChildren = prevView ? prevView.get_children() : [prevSectionLastIcon];
+            return prevViewChildren.length > 0 ? prevViewChildren[0] : prevSectionLastIcon;
         }
 
         // Tear down widget state and disconnect all signals when the app grid

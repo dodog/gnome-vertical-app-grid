@@ -1,5 +1,6 @@
 import Gio from 'gi://Gio';
 import Gtk from 'gi://Gtk';
+import Adw from 'gi://Adw';
 
 import {
     DEFAULT_CATEGORIES,
@@ -52,6 +53,91 @@ export default class VertiGridPreferences extends ExtensionPreferences {
 
         // Populate the "Custom Categories" tab with the editor UI.
         this._buildCustomCategoriesTab(builder, window, settings);
+
+        // Build the "Hidden Apps" page.
+        this._buildHiddenAppsPage(window, settings);
+    }
+
+    // Builds a page listing every app hidden via the app grid's right-click
+    // "Hide from App Grid" menu item, each with a button to restore it.
+    _buildHiddenAppsPage(window, settings) {
+        const page = new Adw.PreferencesPage({
+            title: _('Hidden Apps'),
+            icon_name: 'view-conceal-symbolic'
+        });
+        window.add(page);
+
+        const group = new Adw.PreferencesGroup({
+            title: _('Hidden Apps'),
+            description: _('Apps hidden from this extension\u2019s app grid via its right-click menu. They still appear everywhere else (search, other launchers, the system app menu).')
+        });
+        page.add(group);
+
+        const listBox = new Gtk.ListBox({
+            selection_mode: Gtk.SelectionMode.NONE
+        });
+        listBox.add_css_class('boxed-list');
+
+        const emptyLabel = new Gtk.Label({
+            label: _('No apps are currently hidden.')
+        });
+        emptyLabel.add_css_class('dim-label');
+        listBox.set_placeholder(emptyLabel);
+
+        group.add(listBox);
+
+        const refresh = () => {
+            let child = listBox.get_first_child();
+            while (child) {
+                const next = child.get_next_sibling();
+                listBox.remove(child);
+                child = next;
+            }
+
+            for (const appId of settings.get_strv('hidden-apps')) {
+                const appInfo = Gio.DesktopAppInfo.new(appId);
+                const name = appInfo ? appInfo.get_display_name() : appId;
+
+                const row = new Gtk.ListBoxRow({
+                    activatable: false
+                });
+                const rowBox = new Gtk.Box({
+                    orientation: Gtk.Orientation.HORIZONTAL,
+                    spacing: 8,
+                    margin_top: 8,
+                    margin_bottom: 8,
+                    margin_start: 10,
+                    margin_end: 10
+                });
+                row.set_child(rowBox);
+
+                const nameLabel = new Gtk.Label({
+                    label: name,
+                    hexpand: true,
+                    xalign: 0
+                });
+                rowBox.append(nameLabel);
+
+                const restoreBtn = new Gtk.Button({
+                    label: _('Restore'),
+                    valign: Gtk.Align.CENTER
+                });
+                restoreBtn.connect('clicked', () => {
+                    const current = settings.get_strv('hidden-apps');
+                    settings.set_strv('hidden-apps', current.filter(id => id !== appId));
+                });
+                rowBox.append(restoreBtn);
+
+                listBox.append(row);
+            }
+        };
+
+        refresh();
+        // The refresh() call above already reflects the current setting;
+        // this only needs to catch later changes - either the user clicking
+        // Restore here, or a fresh "Hide from App Grid" click on an icon
+        // while this window happens to be open.
+        settings.connect('changed::hidden-apps', refresh);
     }
 
     // Build the custom categories editor directly into the
