@@ -1,9 +1,12 @@
 import Clutter from 'gi://Clutter';
 import GLib from 'gi://GLib';
+import Shell from 'gi://Shell';
+import St from 'gi://St';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as AppMenu from 'resource:///org/gnome/shell/ui/appMenu.js';
 import * as OverviewControls from 'resource:///org/gnome/shell/ui/overviewControls.js';
+import * as Background from 'resource:///org/gnome/shell/ui/background.js';
 
 import {
     Extension,
@@ -41,6 +44,41 @@ export default class VerticalAppGridExtension extends Extension {
                 hidden.push(appId);
                 this._settings.set_strv('hidden-apps', hidden);
             }
+        };
+
+        // Blurred wallpaper backdrop shown behind the app grid. Built once
+        // here and added directly to Main.layoutManager.overviewGroup
+        this._installBackgroundBlur = () => {
+            if (this._blurBackground) {
+                return;
+            }
+
+            this._blurBackground = new St.Widget({
+                reactive: false,
+                visible: false
+            });
+            this._blurBackground.add_constraint(new Clutter.BindConstraint({
+                source: global.stage,
+                coordinate: Clutter.BindCoordinate.ALL
+            }));
+
+            this._blurBackgroundManagers = [];
+            for (let i = 0; i < Main.layoutManager.monitors.length; i++) {
+                this._blurBackgroundManagers.push(new Background.BackgroundManager({
+                    container: this._blurBackground,
+                    layoutManager: Main.layoutManager,
+                    monitorIndex: i,
+                    vignette: false
+                }));
+            }
+
+            this._blurBackground.add_effect(new Shell.BlurEffect({
+                radius: 60,
+                brightness: 0.75,
+                mode: Shell.BlurMode.ACTOR
+            }));
+
+            Main.layoutManager.overviewGroup.insert_child_at_index(this._blurBackground, 0);
         };
 
         // Main.overview._overview.controls is the public getter for the
@@ -198,6 +236,7 @@ export default class VerticalAppGridExtension extends Extension {
 
         // _onOverviewReady() already calls _attachOverviewControls(),
         // _setAppDisplayLayout(), and _installAppDisplayBoxOverride()
+        this._installBackgroundBlur();
         this._ensureOverviewConnections();
         this._onOverviewReady();
         this._startOverviewReadyPoll();
@@ -205,6 +244,16 @@ export default class VerticalAppGridExtension extends Extension {
         // Now that controls are set up, connect the settings signal and apply initial state
         this._settingsSignal = this._settings.connect('changed::show-workspaces', () => this._updateWorkspacesVisibility());
         this._updateWorkspacesVisibility();
+
+        // Applies the current blur-app-grid-background setting immediately,
+        // without waiting for the next app-grid state transition to pick it
+        // up via _updateAppDisplayVisibility below.
+        this._blurSettingSignal = this._settings.connect('changed::blur-app-grid-background', () => {
+            if (this._blurBackground && this._vertAppDisplay) {
+                this._blurBackground.visible = this._vertAppDisplay.visible &&
+                    this._settings.get_boolean('blur-app-grid-background');
+            }
+        });
 
         this._injectionManager.overrideMethod(overviewControlsProto, '_updateAppDisplayVisibility', () => function(params = null) {
             if (!params) {
@@ -220,6 +269,14 @@ export default class VerticalAppGridExtension extends Extension {
             extension._vertAppDisplay.visible =
                 state > OverviewControls.ControlsState.WINDOW_PICKER &&
                 !this._searchController.searchActive;
+
+            // Keep the blur backdrop's visibility in lockstep with the app
+            // grid's own - shown only while the app grid itself is (i.e.
+            // App Grid state, search inactive), and only if the setting is on.
+            if (extension._blurBackground) {
+                extension._blurBackground.visible = extension._vertAppDisplay.visible &&
+                    extension._settings.get_boolean('blur-app-grid-background');
+            }
 
             // Focus the vertical app display
             if (extension._vertAppDisplay.visible) {
@@ -322,6 +379,24 @@ export default class VerticalAppGridExtension extends Extension {
         if (this._settingsSignal && this._settings) {
             this._settings.disconnect(this._settingsSignal);
             this._settingsSignal = null;
+        }
+
+        if (this._blurSettingSignal && this._settings) {
+            this._settings.disconnect(this._blurSettingSignal);
+            this._blurSettingSignal = null;
+        }
+
+        if (this._blurBackgroundManagers) {
+            this._blurBackgroundManagers.forEach(mgr => mgr.destroy());
+            this._blurBackgroundManagers = null;
+        }
+
+        if (this._blurBackground) {
+            if (this._blurBackground.get_parent()) {
+                this._blurBackground.get_parent().remove_child(this._blurBackground);
+            }
+            this._blurBackground.destroy();
+            this._blurBackground = null;
         }
 
         if (this._overviewShowingId !== null && Main.overview) {

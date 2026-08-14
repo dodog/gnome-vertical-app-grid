@@ -41,7 +41,8 @@ export default class VertiGridPreferences extends ExtensionPreferences {
             ['category-font-size', 'value'],
             ['show-workspaces', 'active'],
             ['always-show-category-nav', 'active'],
-            ['clip-app-labels', 'active']
+            ['clip-app-labels', 'active'],
+            ['blur-app-grid-background', 'active']
         ];
 
         properties.forEach(([key, property]) => {

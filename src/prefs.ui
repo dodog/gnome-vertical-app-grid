@@ -100,6 +100,13 @@
             <property name="subtitle" translatable="yes">Show long app names on a single clipped line instead of wrapping to show the full name</property>
           </object>
         </child>
+
+        <child>
+          <object class="AdwSwitchRow" id="blur-app-grid-background">
+            <property name="title" translatable="yes">Blur Background</property>
+            <property name="subtitle" translatable="yes">Show a blurred wallpaper backdrop behind the app grid</property>
+          </object>
+        </child>
       </object>
     </child>
 
