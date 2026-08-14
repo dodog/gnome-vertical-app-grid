@@ -73,6 +73,12 @@
       <summary>Apps hidden from this extension's app grid</summary>
       <description>List of application IDs (.desktop file names) hidden from this extension's app grid via its right-click menu. Does not affect other launchers, search, or the system app menu.</description>
     </key>
+
+    <key name="blur-app-grid-background" type="b">
+      <default>true</default>
+      <summary>Blur the wallpaper behind the app grid</summary>
+      <description>Show a blurred wallpaper backdrop behind the app grid, matching the workspaces view's own background.</description>
+    </key>
    
   </schema>
 </schemalist>
