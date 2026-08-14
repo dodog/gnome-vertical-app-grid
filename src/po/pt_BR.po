@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: VertiGrid 1.0\n"
 "Report-Msgid-Bugs-To: https://github.com/dodog/vertigrid/issues\n"
-"POT-Creation-Date: 2026-08-01 13:08+0200\n"
+"POT-Creation-Date: 2026-08-14 12:39+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -12,13 +12,17 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.9\n"
 
-#: extension.js:289
+#: extension.js:263
 msgid "Remove from Favorites"
 msgstr "Remover dos favoritos"
 
-#: extension.js:290
+#: extension.js:264
 msgid "Add to Favorites"
 msgstr "Adicionar aos favoritos"
+
+#: extension.js:278
+msgid "Hide this app"
+msgstr ""
 
 #: categories.js:48
 msgid "Development"
@@ -72,124 +76,142 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
-#: appDisplay.js:96 appDisplay.js:381 appDisplay.js:599
+#: appDisplay.js:99 appDisplay.js:393 appDisplay.js:621
 msgid "Favorites"
 msgstr "Favoritos"
 
-#: appDisplay.js:103
+#: appDisplay.js:106
 msgid "All Apps"
 msgstr "Todos os aplicativos"
 
-#: appDisplay.js:442 appDisplay.js:613
+#: appDisplay.js:456 appDisplay.js:635
 msgid "Other"
 msgstr "Other"
 
-#: prefs.js:80
+#: prefs.js:65 prefs.js:71
+msgid "Hidden Apps"
+msgstr ""
+
+#: prefs.js:72
+msgid ""
+"Apps hidden from this extension’s app grid via its right-click menu. They "
+"still appear everywhere else (search, other launchers, the system app menu)."
+msgstr ""
+
+#: prefs.js:82
+msgid "No apps are currently hidden."
+msgstr ""
+
+#: prefs.js:122
+msgid "Restore"
+msgstr ""
+
+#: prefs.js:166
 msgid "Add category"
 msgstr ""
 
-#: prefs.js:92
+#: prefs.js:178
 #, fuzzy
 msgid "Save Custom Categories"
 msgstr "Edit Categories Profile"
 
-#: prefs.js:140
+#: prefs.js:226
 msgid "Category name (e.g. Fonts)"
 msgstr ""
 
-#: prefs.js:151
+#: prefs.js:237
 msgid "Enabled"
 msgstr ""
 
-#: prefs.js:173
+#: prefs.js:259
 msgid "Built-in"
 msgstr ""
 
-#: prefs.js:188
+#: prefs.js:274
 msgid "Merge into another category"
 msgstr ""
 
-#: prefs.js:195
+#: prefs.js:281
 msgid "Target category name (e.g. Webdesign)"
 msgstr ""
 
-#: prefs.js:220
+#: prefs.js:306
 msgid "Custom order"
 msgstr ""
 
-#: prefs.js:239
+#: prefs.js:325
 msgid "Lower numbers appear first"
 msgstr ""
 
-#: prefs.js:272 prefs.js:290
+#: prefs.js:358 prefs.js:376
 msgid "Default icon"
 msgstr ""
 
-#: prefs.js:281
+#: prefs.js:367
 msgid "Choose Icon…"
 msgstr ""
 
-#: prefs.js:349
+#: prefs.js:435
 msgid "Default categories"
 msgstr ""
 
-#: prefs.js:387
+#: prefs.js:473
 #, fuzzy
 msgid "Failed to save custom categories: "
 msgstr "Edit Categories Profile"
 
-#: prefs.js:399
+#: prefs.js:485
 #, fuzzy
 msgid "Custom Categories Saved"
 msgstr "Edit Categories Profile"
 
-#: prefs.js:404
+#: prefs.js:490
 msgid "OK"
 msgstr ""
 
-#: prefs.js:430
+#: prefs.js:516
 msgid ""
 "Your custom category settings have been \n"
 "saved and applied to the app grid."
 msgstr ""
 
-#: prefs.js:449
+#: prefs.js:535
 msgid "Choose an Icon"
 msgstr ""
 
-#: prefs.js:455
+#: prefs.js:541
 msgid "Cancel"
 msgstr ""
 
-#: prefs.js:456
+#: prefs.js:542
 msgid "Use Default Icon"
 msgstr ""
 
-#: prefs.js:461
+#: prefs.js:547
 msgid "Search symbolic icons (e.g. mail, folder, web)…"
 msgstr ""
 
-#: prefs.js:489
+#: prefs.js:575
 msgid "Start typing to search your system’s symbolic icons."
 msgstr ""
 
-#: prefs.js:604
+#: prefs.js:690
 msgid "Category name cannot contain \"::\": "
 msgstr ""
 
-#: prefs.js:612
+#: prefs.js:698
 msgid "Duplicate category name: "
 msgstr ""
 
-#: prefs.js:626
+#: prefs.js:712
 msgid "Enter a target category to merge \""
 msgstr ""
 
-#: prefs.js:626
+#: prefs.js:712
 msgid "\" into, or uncheck \"Merge into another category\"."
 msgstr ""
 
-#: prefs.js:633
+#: prefs.js:719
 msgid "Merge target cannot contain \"::\": "
 msgstr ""
 
@@ -306,6 +328,10 @@ msgid ""
 "can also set a custom sort order for any category, built-in or custom — "
 "lower numbers appear first."
 msgstr ""
+
+#, fuzzy
+#~ msgid "Hide from App Grid"
+#~ msgstr "Grade de aplicativos"
 
 #~ msgid "Preferences"
 #~ msgstr "Preferências"
