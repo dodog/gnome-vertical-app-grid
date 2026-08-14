@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: VertiGrid 1.0\n"
 "Report-Msgid-Bugs-To: https://github.com/dodog/vertigrid/issues\n"
-"POT-Creation-Date: 2026-08-14 12:39+0200\n"
+"POT-Creation-Date: 2026-08-14 12:46+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -12,15 +12,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.9\n"
 
-#: extension.js:263
+#: extension.js:320
 msgid "Remove from Favorites"
 msgstr "移除"
 
-#: extension.js:264
+#: extension.js:321
 msgid "Add to Favorites"
 msgstr "收藏"
 
-#: extension.js:278
+#: extension.js:335
 msgid "Hide this app"
 msgstr ""
 
@@ -88,130 +88,130 @@ msgstr "所有应用"
 msgid "Other"
 msgstr "其他"
 
-#: prefs.js:65 prefs.js:71
+#: prefs.js:66 prefs.js:72
 msgid "Hidden Apps"
 msgstr ""
 
-#: prefs.js:72
+#: prefs.js:73
 msgid ""
 "Apps hidden from this extension’s app grid via its right-click menu. They "
 "still appear everywhere else (search, other launchers, the system app menu)."
 msgstr ""
 
-#: prefs.js:82
+#: prefs.js:83
 msgid "No apps are currently hidden."
 msgstr ""
 
-#: prefs.js:122
+#: prefs.js:123
 msgid "Restore"
 msgstr ""
 
-#: prefs.js:166
+#: prefs.js:167
 msgid "Add category"
 msgstr ""
 
-#: prefs.js:178
+#: prefs.js:179
 #, fuzzy
 msgid "Save Custom Categories"
 msgstr "编辑分组配置"
 
-#: prefs.js:226
+#: prefs.js:227
 msgid "Category name (e.g. Fonts)"
 msgstr ""
 
-#: prefs.js:237
+#: prefs.js:238
 msgid "Enabled"
 msgstr ""
 
-#: prefs.js:259
+#: prefs.js:260
 msgid "Built-in"
 msgstr ""
 
-#: prefs.js:274
+#: prefs.js:275
 msgid "Merge into another category"
 msgstr ""
 
-#: prefs.js:281
+#: prefs.js:282
 msgid "Target category name (e.g. Webdesign)"
 msgstr ""
 
-#: prefs.js:306
+#: prefs.js:307
 msgid "Custom order"
 msgstr ""
 
-#: prefs.js:325
+#: prefs.js:326
 msgid "Lower numbers appear first"
 msgstr ""
 
-#: prefs.js:358 prefs.js:376
+#: prefs.js:359 prefs.js:377
 msgid "Default icon"
 msgstr ""
 
-#: prefs.js:367
+#: prefs.js:368
 msgid "Choose Icon…"
 msgstr ""
 
-#: prefs.js:435
+#: prefs.js:436
 msgid "Default categories"
 msgstr ""
 
-#: prefs.js:473
+#: prefs.js:474
 #, fuzzy
 msgid "Failed to save custom categories: "
 msgstr "编辑分组配置"
 
-#: prefs.js:485
+#: prefs.js:486
 #, fuzzy
 msgid "Custom Categories Saved"
 msgstr "编辑分组配置"
 
-#: prefs.js:490
+#: prefs.js:491
 msgid "OK"
 msgstr ""
 
-#: prefs.js:516
+#: prefs.js:517
 msgid ""
 "Your custom category settings have been \n"
 "saved and applied to the app grid."
 msgstr ""
 
-#: prefs.js:535
+#: prefs.js:536
 msgid "Choose an Icon"
 msgstr ""
 
-#: prefs.js:541
+#: prefs.js:542
 msgid "Cancel"
 msgstr ""
 
-#: prefs.js:542
+#: prefs.js:543
 msgid "Use Default Icon"
 msgstr ""
 
-#: prefs.js:547
+#: prefs.js:548
 msgid "Search symbolic icons (e.g. mail, folder, web)…"
 msgstr ""
 
-#: prefs.js:575
+#: prefs.js:576
 msgid "Start typing to search your system’s symbolic icons."
 msgstr ""
 
-#: prefs.js:690
+#: prefs.js:691
 msgid "Category name cannot contain \"::\": "
 msgstr ""
 
-#: prefs.js:698
+#: prefs.js:699
 msgid "Duplicate category name: "
 msgstr ""
 
-#: prefs.js:712
+#: prefs.js:713
 msgid "Enter a target category to merge \""
 msgstr ""
 
-#: prefs.js:712
+#: prefs.js:713
 msgid "\" into, or uncheck \"Merge into another category\"."
 msgstr ""
 
-#: prefs.js:719
+#: prefs.js:720
 msgid "Merge target cannot contain \"::\": "
 msgstr ""
 
@@ -292,36 +292,44 @@ msgid ""
 "full name"
 msgstr ""
 
-#: prefs.ui:108
+#: prefs.ui:106
+msgid "Blur Background"
+msgstr ""
+
+#: prefs.ui:107
+msgid "Show a blurred wallpaper backdrop behind the app grid"
+msgstr ""
+
+#: prefs.ui:115
 msgid "Customization"
 msgstr "自定义"
 
-#: prefs.ui:112
+#: prefs.ui:119
 msgid "Columns"
 msgstr "列数"
 
-#: prefs.ui:125
+#: prefs.ui:132
 msgid "Icon Size"
 msgstr "图标大小"
 
-#: prefs.ui:138
+#: prefs.ui:145
 msgid "Icon Spacing"
 msgstr "图标间距"
 
-#: prefs.ui:151
+#: prefs.ui:158
 msgid "Category Label Size"
 msgstr ""
 
-#: prefs.ui:152
+#: prefs.ui:159
 msgid "Adjust the font size shown in the category navigation."
 msgstr ""
 
-#: prefs.ui:169 prefs.ui:174
+#: prefs.ui:176 prefs.ui:181
 #, fuzzy
 msgid "Custom Categories"
 msgstr "编辑分组配置"
 
-#: prefs.ui:175
+#: prefs.ui:182
 msgid ""
 "Add a custom category, choose whether it is enabled, and optionally merge it "
 "into an existing category (e.g. merge \"Fonts\" into \"Development\"). You "
