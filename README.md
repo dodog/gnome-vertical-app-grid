@@ -25,6 +25,7 @@
     
 - **Drag-and-Drop**: Rearrange apps within categories and assign apps to different categories by dragging them between category headings
 
+- **Hide apps**: Hide unnecessary apps to get rid of the clutter
 
 ### 🎨 Layout & Appearance
 
@@ -32,9 +33,7 @@
     
 - **Flexible Columns**: Adjust the number of columns from to suit your screen size and preference
     
-- **Customizable Icon Size**
-    
-- **Adjustable Icon Spacing**
+- **Customizable Icon Size**, Adjustable Icon Spacing
     
 - **Category Label Size**: Customize the font size of category navigation labels
   
@@ -45,6 +44,8 @@
 - **Clip long labels toggle**: Option to clip or show full icon labels
 
 - **Show navigation toggle**: Option to always show category navigation
+
+- **Show blurred background**: Option to show blurred background in app grid
     
 
 ### ⚙️ Sorting Options
@@ -95,13 +96,15 @@ git clone https://github.com/dodog/vertigrid.git
 
 cp -r vertigrid/src ~/.local/share/gnome-shell/extensions/vertigrid@dodog.github.com/
 ```
-3.  Restart GNOME Shell (Alt+F2, type `r`, press Enter) or log out and back in.
-    
+3. Compile schemas
+```bash
+glib-compile-schemas ~/.local/share/gnome-shell/extensions/vertigrid@dodog.github.com/schemas/   
+```
+3.  Log out and login in back.
+   
 4.  Enable the extension:
   
-
 ```bash
-
 gnome-extensions enable vertigrid@dodog.github.com
 ```
 * * *
