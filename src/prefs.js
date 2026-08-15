@@ -88,10 +88,14 @@ export default class VertiGridPreferences extends ExtensionPreferences {
         group.add(listBox);
 
         const refresh = () => {
+            // Only remove actual data rows here, not the placeholder set
+            // via listBox.set_placeholder() above.
             let child = listBox.get_first_child();
             while (child) {
                 const next = child.get_next_sibling();
-                listBox.remove(child);
+                if (child instanceof Gtk.ListBoxRow) {
+                    listBox.remove(child);
+                }
                 child = next;
             }
 
