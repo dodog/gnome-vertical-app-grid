@@ -222,58 +222,23 @@ msgstr "\" alebo zrušte označenie políčka „Zlúčiť do inej kategórie“
 msgid "Merge target cannot contain \"::\": "
 msgstr "Cieľová kategória zlúčenia nemôže obsahovať \"::\": "
 
-#: prefs.ui:7 prefs.ui:12
+#: prefs.ui:7
 msgid "App Grid"
 msgstr "Mriežka aplikácií"
 
+#: prefs.ui:12
+msgid "Categories"
+msgstr "Kategórie"
+
 #: prefs.ui:16
-msgid "App Sorting"
-msgstr "Zoradenie aplikácií"
-
-#: prefs.ui:20 prefs.ui:35
-msgid "Most Used"
-msgstr "Najpoužívanejšie"
-
-#: prefs.ui:21 prefs.ui:36
-msgid "Alphabetical"
-msgstr "Abecedne"
-
-#: prefs.ui:30
-msgid "Favorites Sorting"
-msgstr "Zoradenie obľúbených"
-
-#: prefs.ui:34
-msgid "As in Dash"
-msgstr "Ako v Dash"
-
-#: prefs.ui:50
-msgid "Show Favorites Section"
-msgstr "Zobraziť sekciu Obľúbených"
-
-#: prefs.ui:56
-msgid "Show favorites in app grid"
-msgstr "Zobraziť obľúbené položky v mriežke aplikácií"
-
-#: prefs.ui:57
-msgid ""
-"When enabled, applications pinned to favorites will appear in the apps grid"
-msgstr ""
-"Ak je táto funkcia zapnutá, aplikácie pripnuté do obľúbených sa zobrazia v "
-"mriežke aplikácií"
-
-#: prefs.ui:63
 msgid "Group by Category"
 msgstr "Zoskupiť podľa kategórie"
 
-#: prefs.ui:71
-msgid "Category Navigation"
-msgstr "Ponuka kategórií"
-
-#: prefs.ui:75
+#: prefs.ui:22
 msgid "Always Show Category Navigation"
 msgstr "Vždy zobraziť ponuku kategórií"
 
-#: prefs.ui:76
+#: prefs.ui:23
 msgid ""
 "Keep the left category list expanded at all times, instead of only showing "
 "it when you hover over it"
@@ -281,23 +246,70 @@ msgstr ""
 "Ponechať zoznam kategórií na ľavej strane neustále zobrazený, namiesto toho, "
 "aby sa zobrazoval len pri prechode kurzorom nad ním"
 
-#: prefs.ui:86
-msgid "Smooth Scrolling"
-msgstr "Plynulé posúvanie"
+#: prefs.ui:29
+msgid "Category Label Size"
+msgstr "Veľkosť písma ponuky kategórií"
 
-#: prefs.ui:92
-msgid "Show Workspaces Bar"
-msgstr "Zobraziť prehľad pracovných plôch"
+#: prefs.ui:30
+msgid "Adjust the font size shown in the category navigation."
+msgstr "Nastaviť veľkosť písma zobrazeného v prehľade kategórií."
 
-#: prefs.ui:93
-msgid "Show workspace thumbnails at the top of the Overview"
-msgstr "Zobraziť miniatúry pracovných priestorov v hornej časti prehľadu"
+#: prefs.ui:49
+msgid "Show Favorites Section"
+msgstr "Zobraziť sekciu Obľúbených"
 
-#: prefs.ui:99
+#: prefs.ui:55
+msgid "Show favorites in app grid"
+msgstr "Zobraziť obľúbené položky v mriežke aplikácií"
+
+#: prefs.ui:56
+msgid ""
+"When enabled, applications pinned to favorites will appear in the apps grid"
+msgstr ""
+"Ak je táto funkcia zapnutá, aplikácie pripnuté do obľúbených sa zobrazia v "
+"mriežke aplikácií"
+
+#: prefs.ui:62
+msgid "Favorites Sorting"
+msgstr "Zoradenie obľúbených"
+
+#: prefs.ui:66
+msgid "As in Dash"
+msgstr "Ako v Dash"
+
+#: prefs.ui:67 prefs.ui:87
+msgid "Most Used"
+msgstr "Najpoužívanejšie"
+
+#: prefs.ui:68 prefs.ui:88
+msgid "Alphabetical"
+msgstr "Abecedne"
+
+#: prefs.ui:79
+msgid "Grid Appearance"
+msgstr "Vzhľad"
+
+#: prefs.ui:83
+msgid "App Sorting"
+msgstr "Zoradenie aplikácií"
+
+#: prefs.ui:97
+msgid "Columns"
+msgstr "Počet stĺpcov"
+
+#: prefs.ui:110
+msgid "Icon Size"
+msgstr "Veľkosť ikony"
+
+#: prefs.ui:123
+msgid "Icon Spacing"
+msgstr "Rozostup ikon"
+
+#: prefs.ui:136
 msgid "Clip Long App Names"
 msgstr "Skrátiť dlhé názvy aplikácií"
 
-#: prefs.ui:100
+#: prefs.ui:137
 msgid ""
 "Show long app names on a single clipped line instead of wrapping to show the "
 "full name"
@@ -305,43 +317,31 @@ msgstr ""
 "Zobrazovať dlhé názvy aplikácií na jednom skrátenom riadku namiesto toho, "
 "aby sa text zalomil a zobrazil sa celý názov"
 
-#: prefs.ui:106
+#: prefs.ui:143
+msgid "Smooth Scrolling"
+msgstr "Plynulé posúvanie"
+
+#: prefs.ui:149
+msgid "Show Workspaces Bar"
+msgstr "Zobraziť prehľad pracovných plôch"
+
+#: prefs.ui:150
+msgid "Show workspace thumbnails at the top of the Overview"
+msgstr "Zobraziť miniatúry pracovných priestorov v hornej časti prehľadu"
+
+#: prefs.ui:156
 msgid "Blur Background"
 msgstr "Rozmazať pozadie"
 
-#: prefs.ui:107
+#: prefs.ui:157
 msgid "Show a blurred wallpaper backdrop behind the app grid"
-msgstr "Zobraziť rozmazané pozadie za mriežkou aplikácií"
+msgstr "Zobraziť rozmazané pozadie pod aplikáciami"
 
-#: prefs.ui:115
-msgid "Customization"
-msgstr "Prispôsobenie"
-
-#: prefs.ui:119
-msgid "Columns"
-msgstr "Počet stĺpcov"
-
-#: prefs.ui:132
-msgid "Icon Size"
-msgstr "Veľkosť ikony"
-
-#: prefs.ui:145
-msgid "Icon Spacing"
-msgstr "Rozostup ikon"
-
-#: prefs.ui:158
-msgid "Category Label Size"
-msgstr "Veľkosť písma ponuky kategórií"
-
-#: prefs.ui:159
-msgid "Adjust the font size shown in the category navigation."
-msgstr "Nastaviť veľkosť písma zobrazeného v prehľade kategórií."
-
-#: prefs.ui:176 prefs.ui:181
+#: prefs.ui:166 prefs.ui:171
 msgid "Custom Categories"
 msgstr "Vlastné kategórie"
 
-#: prefs.ui:182
+#: prefs.ui:172
 msgid ""
 "Add a custom category, choose whether it is enabled, and optionally merge it "
 "into an existing category (e.g. merge \"Fonts\" into \"Development\"). You "
@@ -352,6 +352,12 @@ msgstr ""
 "s názvom existujúcej kategórie (napr. zlúčiť „Písma“ s „Vývoj“). \n"
 "Pre každú kategóriu, či už predvolenú alebo vlastnú, si môžete tiež nastaviť "
 "vlastné poradie – nižšie čísla sa zobrazujú skôr."
+
+#~ msgid "Category Navigation"
+#~ msgstr "Ponuka kategórií"
+
+#~ msgid "Customization"
+#~ msgstr "Prispôsobenie"
 
 #~ msgid "Hide from App Grid"
 #~ msgstr "Skryť z mriežky aplikácií"

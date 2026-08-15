@@ -215,127 +215,131 @@ msgstr ""
 msgid "Merge target cannot contain \"::\": "
 msgstr ""
 
-#: prefs.ui:7 prefs.ui:12
+#: prefs.ui:7
 msgid "App Grid"
 msgstr "Grade de aplicativos"
 
+#: prefs.ui:12
+#, fuzzy
+msgid "Categories"
+msgstr "Edit Categories Profile"
+
 #: prefs.ui:16
-msgid "App Sorting"
-msgstr "Ordem dos aplicativos"
-
-#: prefs.ui:20 prefs.ui:35
-msgid "Most Used"
-msgstr "Mais usados"
-
-#: prefs.ui:21 prefs.ui:36
-msgid "Alphabetical"
-msgstr "Alfabética"
-
-#: prefs.ui:30
-msgid "Favorites Sorting"
-msgstr "Ordem dos favoritos"
-
-#: prefs.ui:34
-msgid "As in Dash"
-msgstr "Como no Dash"
-
-#: prefs.ui:50
-msgid "Show Favorites Section"
-msgstr "Exibir seção de favoritos"
-
-#: prefs.ui:56
-msgid "Show favorites in app grid"
-msgstr ""
-
-#: prefs.ui:57
-msgid ""
-"When enabled, applications pinned to favorites will appear in the apps grid"
-msgstr ""
-
-#: prefs.ui:63
 msgid "Group by Category"
 msgstr ""
 
-#: prefs.ui:71
-msgid "Category Navigation"
-msgstr ""
-
-#: prefs.ui:75
+#: prefs.ui:22
 msgid "Always Show Category Navigation"
 msgstr ""
 
-#: prefs.ui:76
+#: prefs.ui:23
 msgid ""
 "Keep the left category list expanded at all times, instead of only showing "
 "it when you hover over it"
 msgstr ""
 
-#: prefs.ui:86
-msgid "Smooth Scrolling"
-msgstr "Rolagem suave"
-
-#: prefs.ui:92
-msgid "Show Workspaces Bar"
+#: prefs.ui:29
+msgid "Category Label Size"
 msgstr ""
 
-#: prefs.ui:93
-msgid "Show workspace thumbnails at the top of the Overview"
+#: prefs.ui:30
+msgid "Adjust the font size shown in the category navigation."
 msgstr ""
 
-#: prefs.ui:99
+#: prefs.ui:49
+msgid "Show Favorites Section"
+msgstr "Exibir seção de favoritos"
+
+#: prefs.ui:55
+msgid "Show favorites in app grid"
+msgstr ""
+
+#: prefs.ui:56
+msgid ""
+"When enabled, applications pinned to favorites will appear in the apps grid"
+msgstr ""
+
+#: prefs.ui:62
+msgid "Favorites Sorting"
+msgstr "Ordem dos favoritos"
+
+#: prefs.ui:66
+msgid "As in Dash"
+msgstr "Como no Dash"
+
+#: prefs.ui:67 prefs.ui:87
+msgid "Most Used"
+msgstr "Mais usados"
+
+#: prefs.ui:68 prefs.ui:88
+msgid "Alphabetical"
+msgstr "Alfabética"
+
+#: prefs.ui:79
+msgid "Grid Appearance"
+msgstr ""
+
+#: prefs.ui:83
+msgid "App Sorting"
+msgstr "Ordem dos aplicativos"
+
+#: prefs.ui:97
+msgid "Columns"
+msgstr "Colunas"
+
+#: prefs.ui:110
+msgid "Icon Size"
+msgstr "Tamanho dos ícones"
+
+#: prefs.ui:123
+msgid "Icon Spacing"
+msgstr "Espaçamento dos ícones"
+
+#: prefs.ui:136
 msgid "Clip Long App Names"
 msgstr ""
 
-#: prefs.ui:100
+#: prefs.ui:137
 msgid ""
 "Show long app names on a single clipped line instead of wrapping to show the "
 "full name"
 msgstr ""
 
-#: prefs.ui:106
+#: prefs.ui:143
+msgid "Smooth Scrolling"
+msgstr "Rolagem suave"
+
+#: prefs.ui:149
+msgid "Show Workspaces Bar"
+msgstr ""
+
+#: prefs.ui:150
+msgid "Show workspace thumbnails at the top of the Overview"
+msgstr ""
+
+#: prefs.ui:156
 msgid "Blur Background"
 msgstr ""
 
-#: prefs.ui:107
+#: prefs.ui:157
 msgid "Show a blurred wallpaper backdrop behind the app grid"
 msgstr ""
 
-#: prefs.ui:115
-msgid "Customization"
-msgstr "Personalização"
-
-#: prefs.ui:119
-msgid "Columns"
-msgstr "Colunas"
-
-#: prefs.ui:132
-msgid "Icon Size"
-msgstr "Tamanho dos ícones"
-
-#: prefs.ui:145
-msgid "Icon Spacing"
-msgstr "Espaçamento dos ícones"
-
-#: prefs.ui:158
-msgid "Category Label Size"
-msgstr ""
-
-#: prefs.ui:159
-msgid "Adjust the font size shown in the category navigation."
-msgstr ""
-
-#: prefs.ui:176 prefs.ui:181
+#: prefs.ui:166 prefs.ui:171
 #, fuzzy
 msgid "Custom Categories"
 msgstr "Edit Categories Profile"
 
-#: prefs.ui:182
+#: prefs.ui:172
 msgid ""
 "Add a custom category, choose whether it is enabled, and optionally merge it "
 "into an existing category (e.g. merge \"Fonts\" into \"Development\"). You "
 "can also set a custom sort order for any category, built-in or custom — "
 "lower numbers appear first."
 msgstr ""
+
+#~ msgid "Customization"
+#~ msgstr "Personalização"
 
 #, fuzzy
 #~ msgid "Hide from App Grid"
