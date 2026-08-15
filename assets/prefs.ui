@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface domain="vertigrid@dodog.github.com">
+  <requires lib="gtk" version="4.0"/>
+  <requires lib="adwaita" version="1.0"/>
+
+  <object class="AdwPreferencesPage" id="app-grid-page">
+    <property name="title" translatable="yes">App Grid</property>
+    <property name="icon-name">view-grid-symbolic</property>
+
+    <child>
+      <object class="AdwPreferencesGroup">
+        <property name="title" translatable="yes">Categories</property>
+
+        <child>
+          <object class="AdwSwitchRow" id="category-grouping">
+            <property name="title" translatable="yes">Group by Category</property>
+          </object>
+        </child>
+
+        <child>
+          <object class="AdwSwitchRow" id="always-show-category-nav">
+            <property name="title" translatable="yes">Always Show Category Navigation</property>
+            <property name="subtitle" translatable="yes">Keep the left category list expanded at all times, instead of only showing it when you hover over it</property>
+          </object>
+        </child>
+
+        <child>
+          <object class="AdwSpinRow" id="category-font-size">
+            <property name="title" translatable="yes">Category Label Size</property>
+            <property name="subtitle" translatable="yes">Adjust the font size shown in the category navigation.</property>
+            <property name="adjustment">
+              <object class="GtkAdjustment">
+                <property name="lower">9</property>
+                <property name="upper">32</property>
+                <property name="step-increment">1</property>
+              </object>
+            </property>
+          </object>
+        </child>
+      </object>
+    </child>
+
+    <child>
+      <object class="AdwPreferencesGroup">
+        <property name="title" translatable="yes">Favorites</property>
+
+        <child>
+          <object class="AdwSwitchRow" id="favorites-section">
+            <property name="title" translatable="yes">Show Favorites Section</property>
+          </object>
+        </child>
+
+        <child>
+          <object class="AdwSwitchRow" id="show-favorites-in-app-grid">
+            <property name="title" translatable="yes">Show favorites in app grid</property>
+            <property name="subtitle" translatable="yes">When enabled, applications pinned to favorites will appear in the apps grid</property>
+          </object>
+        </child>
+
+        <child>
+          <object class="AdwComboRow" id="favorites-sorting">
+            <property name="title" translatable="yes">Favorites Sorting</property>
+            <property name="model">
+              <object class="GtkStringList">
+                <items>
+                  <item translatable="yes">As in Dash</item>
+                  <item translatable="yes">Most Used</item>
+                  <item translatable="yes">Alphabetical</item>
+                </items>
+              </object>
+            </property>
+          </object>
+        </child>
+      </object>
+    </child>
+
+    <child>
+      <object class="AdwPreferencesGroup">
+        <property name="title" translatable="yes">Grid Appearance</property>
+
+        <child>
+          <object class="AdwComboRow" id="app-sorting">
+            <property name="title" translatable="yes">App Sorting</property>
+            <property name="model">
+              <object class="GtkStringList">
+                <items>
+                  <item translatable="yes">Most Used</item>
+                  <item translatable="yes">Alphabetical</item>
+                </items>
+              </object>
+            </property>
+          </object>
+        </child>
+
+        <child>
+          <object class="AdwSpinRow" id="columns">
+            <property name="title" translatable="yes">Columns</property>
+            <property name="adjustment">
+              <object class="GtkAdjustment">
+                <property name="lower">3</property>
+                <property name="upper">20</property>
+                <property name="step-increment">1</property>
+              </object>
+            </property>
+          </object>
+        </child>
+
+        <child>
+          <object class="AdwSpinRow" id="icon-size">
+            <property name="title" translatable="yes">Icon Size</property>
+            <property name="adjustment">
+              <object class="GtkAdjustment">
+                <property name="lower">16</property>
+                <property name="upper">128</property>
+                <property name="step-increment">1</property>
+              </object>
+            </property>
+          </object>
+        </child>
+
+        <child>
+          <object class="AdwSpinRow" id="icon-spacing">
+            <property name="title" translatable="yes">Icon Spacing</property>
+            <property name="adjustment">
+              <object class="GtkAdjustment">
+                <property name="lower">0</property>
+                <property name="upper">128</property>
+                <property name="step-increment">1</property>
+              </object>
+            </property>
+          </object>
+        </child>
+
+        <child>
+          <object class="AdwSwitchRow" id="clip-app-labels">
+            <property name="title" translatable="yes">Clip Long App Names</property>
+            <property name="subtitle" translatable="yes">Show long app names on a single clipped line instead of wrapping to show the full name</property>
+          </object>
+        </child>
+
+        <child>
+          <object class="AdwSwitchRow" id="animate-scroll">
+            <property name="title" translatable="yes">Smooth Scrolling</property>
+          </object>
+        </child>
+
+        <child>
+          <object class="AdwSwitchRow" id="show-workspaces">
+            <property name="title" translatable="yes">Show Workspaces Bar</property>
+            <property name="subtitle" translatable="yes">Show workspace thumbnails at the top of the Overview</property>
+          </object>
+        </child>
+
+        <child>
+          <object class="AdwSwitchRow" id="blur-app-grid-background">
+            <property name="title" translatable="yes">Blur Background</property>
+            <property name="subtitle" translatable="yes">Show a blurred wallpaper backdrop behind the app grid</property>
+          </object>
+        </child>
+      </object>
+    </child>
+
+  </object>
+
+  <object class="AdwPreferencesPage" id="custom-categories-page">
+    <property name="title" translatable="yes">Custom Categories</property>
+    <property name="icon-name">view-list-symbolic</property>
+
+    <child>
+      <object class="AdwPreferencesGroup" id="custom-categories-group">
+        <property name="title" translatable="yes">Custom Categories</property>
+        <property name="description" translatable="yes">Add a custom category, choose whether it is enabled, and optionally merge it into an existing category (e.g. merge &quot;Fonts&quot; into &quot;Development&quot;). You can also set a custom sort order for any category, built-in or custom — lower numbers appear first.</property>
+      </object>
+    </child>
+
+  </object>
+
+</interface>
