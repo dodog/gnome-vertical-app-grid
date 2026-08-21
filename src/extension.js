@@ -249,10 +249,8 @@ export default class VerticalAppGridExtension extends Extension {
         // without waiting for the next app-grid state transition to pick it
         // up via _updateAppDisplayVisibility below.
         this._blurSettingSignal = this._settings.connect('changed::blur-app-grid-background', () => {
-            if (this._blurBackground && this._vertAppDisplay) {
-                this._blurBackground.visible = this._vertAppDisplay.visible &&
-                    this._settings.get_boolean('blur-app-grid-background');
-            }
+            this._blurBackground.visible = this._vertAppDisplay.visible &&
+                this._settings.get_boolean('blur-app-grid-background');
         });
 
         this._injectionManager.overrideMethod(overviewControlsProto, '_updateAppDisplayVisibility', () => function(params = null) {
@@ -273,10 +271,8 @@ export default class VerticalAppGridExtension extends Extension {
             // Keep the blur backdrop's visibility in lockstep with the app
             // grid's own - shown only while the app grid itself is (i.e.
             // App Grid state, search inactive), and only if the setting is on.
-            if (extension._blurBackground) {
-                extension._blurBackground.visible = extension._vertAppDisplay.visible &&
-                    extension._settings.get_boolean('blur-app-grid-background');
-            }
+            extension._blurBackground.visible = extension._vertAppDisplay.visible &&
+                extension._settings.get_boolean('blur-app-grid-background');
 
             // Focus the vertical app display
             if (extension._vertAppDisplay.visible) {

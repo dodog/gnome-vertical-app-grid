@@ -471,38 +471,34 @@ export function getAppCategory(appInfo, context) {
 
         // Check user overrides first (e.g. drag-and-drop into a
         // category), but validate them against current enabled/merged category config.
-        try {
-            const id = appInfo.get_id();
-            const overrides = context.overrides;
-            if (overrides.has(id)) {
-                const overrideCategory = overrides.get(id).category;
-                const catConfig = currentCategories.find(c => _categoryNamesEqual(c.name, overrideCategory));
-                if (catConfig) {
-                    if (!catConfig.enabled) {
-                        return 'Other';
-                    }
-                    if (catConfig.merge) {
-                        return resolve(catConfig.merge);
-                    }
-                    return resolve(catConfig.name);
-                }
-
-                if (_categoryNamesEqual(overrideCategory, 'Other')) {
-                    // An explicit, intentional placement into Other (e.g.
-                    // dragging an app there, or reordering within it) -
-                    // honor it as-is rather than falling through below.
+        const id = appInfo.get_id();
+        const overrides = context.overrides;
+        if (overrides.has(id)) {
+            const overrideCategory = overrides.get(id).category;
+            const catConfig = currentCategories.find(c => _categoryNamesEqual(c.name, overrideCategory));
+            if (catConfig) {
+                if (!catConfig.enabled) {
                     return 'Other';
                 }
-
-                // No config found and it isn't 'Other' either, meaning the
-                // custom category itself was deleted entirely (not just
-                // disabled - that case is handled above and still resolves
-                // to 'Other'). The override is now stale, so fall through
-                // to natural detection via the app's own .desktop
-                // Categories= below instead of stranding it in Other.
+                if (catConfig.merge) {
+                    return resolve(catConfig.merge);
+                }
+                return resolve(catConfig.name);
             }
-        } catch {
-            // ignore if appInfo doesn't have get_id
+
+            if (_categoryNamesEqual(overrideCategory, 'Other')) {
+                // An explicit, intentional placement into Other (e.g.
+                // dragging an app there, or reordering within it) -
+                // honor it as-is rather than falling through below.
+                return 'Other';
+            }
+
+            // No config found and it isn't 'Other' either, meaning the
+            // custom category itself was deleted entirely (not just
+            // disabled - that case is handled above and still resolves
+            // to 'Other'). The override is now stale, so fall through
+            // to natural detection via the app's own .desktop
+            // Categories= below instead of stranding it in Other.
         }
         const categories = appInfo.get_categories();
         if (!categories)

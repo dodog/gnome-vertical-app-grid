@@ -325,7 +325,7 @@ export const VerticalAppDisplay = GObject.registerClass({
 
             const layout = destView.layout_manager;
             const columns = Math.max(1, layout._columns || 1);
-            const spacing = layout._spacing || 0;
+            const spacing = layout._spacing;
             const childSize = layout._getMinChildSize(children);
             const cellSize = childSize + spacing;
 
@@ -916,7 +916,7 @@ export const VerticalAppDisplay = GObject.registerClass({
             if (this._suppressScrollActiveUpdate)
                 return;
 
-            if (!this._categoryOrder || this._categoryOrder.length === 0)
+            if (this._categoryOrder.length === 0)
                 return;
 
             const scrollValue = this._scrollView.vadjustment.value;
@@ -1505,52 +1505,16 @@ export const VerticalAppDisplay = GObject.registerClass({
             }
         }
 
-        _findLabelActor(actor) {
-            if (actor instanceof St.Label) {
-                return actor;
-            }
-
-            const children = actor.get_children ? actor.get_children() : [];
-            for (const child of children) {
-                const found = this._findLabelActor(child);
-                if (found) {
-                    return found;
-                }
-            }
-
-            return null;
-        }
-
         _showFullAppLabel(appIcon) {
             // AppDisplay.AppIcon truncates the name to a single ellipsized
             // line by default and only shows the full name as a hover
             // overlay. Force it to always wrap onto multiple lines instead.
-            let label = null;
-            try {
-                if (appIcon.icon && appIcon.icon.label instanceof St.Label) {
-                    label = appIcon.icon.label;
-                } else if (appIcon.label instanceof St.Label) {
-                    label = appIcon.label;
-                } else {
-                    label = this._findLabelActor(appIcon);
-                }
-            } catch {
-                // Icon internals vary by AppIcon implementation; leave
-                // label null and fall through to the guard below.
-            }
-
-            if (!label || !label.clutter_text) return;
-
-            try {
-                const clutterText = label.clutter_text;
-                clutterText.set_line_wrap(true);
-                clutterText.set_line_wrap_mode(Pango.WrapMode.WORD_CHAR);
-                clutterText.set_single_line_mode(false);
-                clutterText.ellipsize = Pango.EllipsizeMode.END;
-                label.set_style('text-align: center;');
-            } catch {
-                // Label may have been disposed; nothing to do.
-            }
+            const clutterText = appIcon.icon.label.clutter_text;
+            clutterText.set_line_wrap(true);
+            clutterText.set_line_wrap_mode(Pango.WrapMode.WORD_CHAR);
+            clutterText.set_single_line_mode(false);
+            clutterText.ellipsize = Pango.EllipsizeMode.END;
+            appIcon.icon.label.set_style('text-align: center;');
         }
 
         _attachDragHandlers(appIcon) {
