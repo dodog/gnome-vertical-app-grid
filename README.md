@@ -10,7 +10,7 @@
 **VertiGrid** is a GNOME Shell extension that replaces the default horizontal app grid menu with a vertical app menu in the overview. It adds category grouping, navigation, smooth scrolling, workspace visibility control, and layout customization for a cleaner overview experience.
 
 * * *
-
+![Vertical layout focus mode](assets/vertigrid-background.png)
 
 ## ✨ Features
 
@@ -65,8 +65,8 @@
 
 ### VertiGrid layout with categories
 [![Vertical layout with categories](assets/vertigrid-navigation.png)](https://github.com/user-attachments/assets/1a23ba1f-9945-4168-b836-6e72542beaae)
-### VertiGrid with blurred background
-![Vertical layout focus mode](assets/vertigrid-background.png)
+
+
 ### VertiGrid with workspaces
 ![Vertical layout with workspaces](assets/vertigrid_workspaces.png)
 ### Settings
