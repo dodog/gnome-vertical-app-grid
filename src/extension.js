@@ -106,9 +106,7 @@ export default class VerticalAppGridExtension extends Extension {
             }
 
             // Re-orders the layers so app grid is placed below the workspaces view
-            if (controls._workspacesDisplay) {
-                controls.set_child_below_sibling(this._vertAppDisplay, controls._workspacesDisplay);
-            }
+            controls.set_child_below_sibling(this._vertAppDisplay, controls._workspacesDisplay);
 
             this._overviewControls = controls;
             this._overviewLayoutManager = controls.layout_manager;
@@ -128,7 +126,7 @@ export default class VerticalAppGridExtension extends Extension {
         // workspaces are hidden, so the app grid can use more vertical room.
         this._installAppDisplayBoxOverride = () => {
             const controls = this._overviewControls || this._getOverviewControls();
-            if (!controls || !controls.layout_manager || this._appDisplayBoxOverrideInstalled) {
+            if (!controls || this._appDisplayBoxOverrideInstalled) {
                 return false;
             }
 
@@ -208,7 +206,7 @@ export default class VerticalAppGridExtension extends Extension {
         // Ensure we listen for the overview showing signal so we can attach the
         // app display later if it was not ready at enable().
         this._ensureOverviewConnections = () => {
-            if (!Main.overview || this._overviewShowingId !== null) {
+            if (this._overviewShowingId !== null) {
                 return;
             }
 
@@ -228,9 +226,7 @@ export default class VerticalAppGridExtension extends Extension {
 
             this._overviewControls = controls;
 
-            if (controls.layout_manager) {
-                controls.layout_manager.layout_changed();
-            }
+            controls.layout_manager.layout_changed();
             controls.queue_relayout();
         };
 

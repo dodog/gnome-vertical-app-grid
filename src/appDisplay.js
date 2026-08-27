@@ -187,11 +187,7 @@ export const VerticalAppDisplay = GObject.registerClass({
                 this._scrollView.scrollTo(0, false);
                 this._cancelDrag();
                 // Only force the nav back to collapsed if the user hasn't
-                // asked for it to always stay expanded - otherwise this ran
-                // unconditionally on every close, fighting the setting: it
-                // set _navCollapsed = true regardless, and since hover is
-                // intentionally a no-op while always-visible is on, nothing
-                // ever re-expanded it on the next open.
+                // asked for it to always stay expanded.
                 if (!this._navAlwaysVisible) {
                     this._setNavCollapsed(true, false);
                 }
@@ -324,7 +320,7 @@ export const VerticalAppDisplay = GObject.registerClass({
             const localY = stageY - viewY;
 
             const layout = destView.layout_manager;
-            const columns = Math.max(1, layout._columns || 1);
+            const columns = Math.max(1, layout._columns);
             const spacing = layout._spacing;
             const childSize = layout._getMinChildSize(children);
             const cellSize = childSize + spacing;
@@ -425,6 +421,7 @@ export const VerticalAppDisplay = GObject.registerClass({
                     const label = this._createSectionHeader(_(category));
                     const view = new St.Viewport({
                         layout_manager: new VerticalLayout(this._settings),
+                        reactive: true,
                         style: 'overflow: hidden;'
                     });
 
@@ -1186,110 +1183,35 @@ export const VerticalAppDisplay = GObject.registerClass({
             };
         }
 
-        _findCategoryViewAtStagePoint(x, y) {
-            for (const cat in this._categoryViews) {
-                const view = this._categoryViews[cat];
+        // Gives empty category viewports a temporary pickable area for the
+        // duration of a drag. Add real, but invisible child. Removed again once
+        // the drag ends, so browsing the grid normally is unaffected.
+        _setEmptyCategoryDropTargetsActive(active) {
+            const size = this._settings.get_int('icon-size');
+
+            for (const category in this._categoryViews) {
+                const view = this._categoryViews[category];
                 if (!view) continue;
 
-                const viewPos = this._getStagePosition(view);
-
-                let bounds = null;
-                try {
-                    bounds = view.get_allocation_box();
-                } catch {
-                    // View may not be allocated yet; bounds stays null.
-                }
-
-                // If the view has no allocation (empty), try to allow dropping
-                // on the area under the category label so users can drop into
-                // empty categories.
-                let width = 0;
-                let height = 0;
-                if (bounds) {
-                    width = bounds.x2 - bounds.x1;
-                    height = bounds.y2 - bounds.y1;
-                }
-
-                // Primary hit-test: view bounds
-                if (bounds && x >= viewPos[0] && x <= viewPos[0] + width && y >= viewPos[1] && y <= viewPos[1] + height) {
-                    return {
-                        view,
-                        category: cat
-                    };
-                }
-
-                // If view is effectively empty (very small height), expand drop area
-                // to include the label and a small region below it so dragging
-                // into empty categories works.
-                try {
-                    if (!bounds || height <= 2) {
-                        const label = this._categoryLabels[cat];
-                        if (label) {
-                            const labelPos = this._getStagePosition(label);
-
-                            let labelBox = null;
-                            try {
-                                labelBox = label.get_allocation_box();
-                            } catch {
-                                // Label may not be allocated yet; labelBox stays null.
-                            }
-
-                            const labelWidth = labelBox ? (labelBox.x2 - labelBox.x1) : Math.max(64, width);
-                            const labelHeight = labelBox ? (labelBox.y2 - labelBox.y1) : 24;
-
-                            // Default padding for a generous empty-category
-                            // drop target, but clamped below so it can
-                            // never extend past wherever the next visible
-                            // category's own header sits - otherwise a
-                            // sparsely-populated category's drop zone can
-                            // bleed into its neighbor's space and steal
-                            // drops meant for that category.
-                            let dropPadding = 160;
-                            try {
-                                const orderIdx = this._categoryOrder ? this._categoryOrder.indexOf(cat) : -1;
-                                if (orderIdx !== -1 && orderIdx + 1 < this._categoryOrder.length) {
-                                    const nextCat = this._categoryOrder[orderIdx + 1];
-                                    const nextLabel = this._categoryLabels[nextCat];
-                                    if (nextLabel) {
-                                        const nextLabelPos = this._getStagePosition(nextLabel);
-                                        const gapToNext = nextLabelPos[1] - (labelPos[1] + labelHeight);
-                                        if (gapToNext > 0) {
-                                            // Leave a small buffer before the next header rather than touching it exactly.
-                                            dropPadding = Math.max(20, Math.min(dropPadding, gapToNext - 10));
-                                        }
-                                    }
-                                }
-                            } catch {
-                                // Couldn't read the next category's position;
-                                // fall back to the default dropPadding above.
-                            }
-
-                            const dropX1 = labelPos[0];
-                            const dropX2 = labelPos[0] + labelWidth;
-                            const dropY1 = labelPos[1];
-                            const dropY2 = labelPos[1] + labelHeight + dropPadding;
-
-                            if (x >= dropX1 && x <= dropX2 && y >= dropY1 && y <= dropY2) {
-                                return {
-                                    view,
-                                    category: cat
-                                };
-                            }
-                        }
+                if (active) {
+                    if (view.get_children().length === 0) {
+                        view._dropPlaceholder = new St.Widget({
+                            width: size,
+                            height: size
+                        });
+                        view.add_child(view._dropPlaceholder);
                     }
-                } catch {
-                    // Empty-category drop-zone expansion is best-effort;
-                    // skip it for this category on failure.
+                } else if (view._dropPlaceholder) {
+                    view._dropPlaceholder.destroy();
+                    view._dropPlaceholder = null;
                 }
             }
-            return {
-                view: null,
-                category: null
-            };
         }
 
         _startDrag(actor) {
             try {
+                this._setEmptyCategoryDropTargetsActive(true);
+
                 // Ensure any previous drag state is cleared
                 if (this._dragGhost) {
                     this._dragGhost.destroy();
@@ -1344,10 +1266,7 @@ export const VerticalAppDisplay = GObject.registerClass({
                             }
 
                             const target = global.stage.get_actor_at_pos(Clutter.PickMode.REACTIVE, mx, my);
-                            let found = this._findCategoryViewFromActor(target);
-                            if (!found.view) {
-                                found = this._findCategoryViewAtStagePoint(mx, my);
-                            }
+                            const found = this._findCategoryViewFromActor(target);
                             const foundView = found.view;
                             if (foundView !== this._highlightedView) {
                                 try {
@@ -1383,10 +1302,7 @@ export const VerticalAppDisplay = GObject.registerClass({
 
                             const targetActor = global.stage.get_actor_at_pos(Clutter.PickMode.REACTIVE, rx, ry);
 
-                            let found = this._findCategoryViewFromActor(targetActor);
-                            if (!found.view) {
-                                found = this._findCategoryViewAtStagePoint(rx, ry);
-                            }
+                            const found = this._findCategoryViewFromActor(targetActor);
                             if (found.view) {
                                 const cat = found.category;
                                 const destView = found.view;
@@ -1424,19 +1340,8 @@ export const VerticalAppDisplay = GObject.registerClass({
                             console.debug(`vertigrid: release handler exception=${e}`);
                         }
 
-                        try {
-                            global.stage.disconnect(this._dragCapturedHandler);
-                        } catch {
-                            // Already disconnected; nothing to do.
-                        }
-                        this._dragCapturedHandler = null;
+                        this._cancelActiveDrag();
 
-                        if (this._dragGhost) {
-                            this._dragGhost.destroy();
-                            this._dragGhost = null;
-                        }
-
-                        this._dragActor = null;
                         // Consume the release too - this is the critical part:
                         // without this, GNOME's own capture-phase background-
                         // click handler would still see this same release and
@@ -1466,6 +1371,8 @@ export const VerticalAppDisplay = GObject.registerClass({
         }
 
         _cancelActiveDrag() {
+            this._setEmptyCategoryDropTargetsActive(false);
+
             if (this._dragCapturedHandler) {
                 global.stage.disconnect(this._dragCapturedHandler);
                 this._dragCapturedHandler = null;
@@ -1662,9 +1569,9 @@ export const VerticalAppDisplay = GObject.registerClass({
             }
 
             const parentView = focused.get_parent();
-            const layout = parentView && parentView.layout_manager;
-            const columns = (layout && layout._columns) ? layout._columns : 1;
-            const viewChildren = parentView ? parentView.get_children() : [];
+            const layout = parentView.layout_manager;
+            const columns = Math.max(1, layout._columns);
+            const viewChildren = parentView.get_children();
             const localIndex = viewChildren.indexOf(focused);
             const last = this._appIcons.length - 1;
 
@@ -1714,10 +1621,8 @@ export const VerticalAppDisplay = GObject.registerClass({
             this._overview.disconnectObject(this);
             this._settings.disconnectObject(this);
 
-            if (this._scrollValueHandler) {
-                this._scrollView.vadjustment.disconnect(this._scrollValueHandler);
-                this._scrollValueHandler = null;
-            }
+            this._scrollView.vadjustment.disconnect(this._scrollValueHandler);
+            this._scrollValueHandler = null;
 
             this._cancelDrag();
             this._cancelNavAnimation();
