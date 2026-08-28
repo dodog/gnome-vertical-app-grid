@@ -317,9 +317,6 @@ export default class VerticalAppGridExtension extends Extension {
         });
 
         // Add a "Hide from App Grid" item to the app right-click menu.
-        // setApp() runs exactly once per per-icon menu instance in normal
-        // use (AppIcon.popupMenu() creates one AppMenu per icon, lazily, and
-        // calls setApp() immediately after
         this._injectionManager.overrideMethod(AppMenu.AppMenu.prototype, 'setApp', originalFn => function(app) {
             originalFn.call(this, app);
 

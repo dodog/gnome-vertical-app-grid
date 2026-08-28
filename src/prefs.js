@@ -59,8 +59,8 @@ export default class VertiGridPreferences extends ExtensionPreferences {
         this._buildHiddenAppsPage(window, settings);
     }
 
-    // Builds a page listing every app hidden via the app grid's right-click
-    // "Hide from App Grid" menu item, each with a button to restore it.
+    // Builds a page listing every app hidden via right-click context menu,
+    // each with a button to restore it.
     _buildHiddenAppsPage(window, settings) {
         const page = new Adw.PreferencesPage({
             title: _('Hidden Apps'),
@@ -160,7 +160,7 @@ export default class VertiGridPreferences extends ExtensionPreferences {
             margin_bottom: 6
         });
 
-        // Add/Save row goes at the top under the group's intro text
+        // Add/Save row at the top under the group's intro text
         const buttonRow = new Gtk.Box({
             orientation: Gtk.Orientation.HORIZONTAL,
             spacing: 8
@@ -685,17 +685,7 @@ export default class VertiGridPreferences extends ExtensionPreferences {
                 continue;
             }
 
-            // Category names are stored (and matched against app-category
-            // overrides) using "appId::category::index"-style encoding, so
-            // a name containing "::" would corrupt that encoding when an
-            // app gets dragged into it - reject it up front instead.
-            if (name.includes('::')) {
-                return {
-                    categories: [],
-                    errorMessage: _('Category name cannot contain "::": ') + name
-                };
-            }
-
+            // Category names must be unique (case-insensitive)
             const key = name.toLowerCase();
             if (seenNames.has(key)) {
                 return {
@@ -715,13 +705,6 @@ export default class VertiGridPreferences extends ExtensionPreferences {
                     return {
                         categories: [],
                         errorMessage: _('Enter a target category to merge "') + name + _('" into, or uncheck "Merge into another category".')
-                    };
-                }
-
-                if (mergeTarget.includes('::')) {
-                    return {
-                        categories: [],
-                        errorMessage: _('Merge target cannot contain "::": ') + mergeTarget
                     };
                 }
 
@@ -793,13 +776,8 @@ export default class VertiGridPreferences extends ExtensionPreferences {
             const key = category.name.toLowerCase();
             const existingIndex = merged.findIndex(c => c.name.toLowerCase() === key);
             if (existingIndex >= 0) {
-                // Keep the built-in's own canonical-cased name rather than
-                // whatever casing the stored override happens to use (only
-                // reachable via manual GSettings edits outside this UI,
-                // since the editor itself always round-trips the canonical
-                // name for built-in rows) - a mismatched casing here would
-                // make the _(name) gettext lookup for the row label
-                // silently miss its translation.
+                // When merging saved user settings with system defaults, 
+                // always use the system's exact capitalization for category names.
                 merged[existingIndex] = {
                     ...category,
                     name: merged[existingIndex].name,

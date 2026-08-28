@@ -187,7 +187,11 @@ export const VerticalAppDisplay = GObject.registerClass({
                 this._scrollView.scrollTo(0, false);
                 this._cancelDrag();
                 // Only force the nav back to collapsed if the user hasn't
-                // asked for it to always stay expanded.
+                // asked for it to always stay expanded - otherwise this ran
+                // unconditionally on every close, fighting the setting: it
+                // set _navCollapsed = true regardless, and since hover is
+                // intentionally a no-op while always-visible is on, nothing
+                // ever re-expanded it on the next open.
                 if (!this._navAlwaysVisible) {
                     this._setNavCollapsed(true, false);
                 }
@@ -953,8 +957,7 @@ export const VerticalAppDisplay = GObject.registerClass({
             // Computed once per pass and reused for every app below - avoids
             // getAppCategory() independently re-reading and re-parsing
             // custom-categories/app-category-overrides from settings once
-            // per installed app, which is wasted work since both are the
-            // same for every app within a single _loadAppsByCategory() call.
+            // per installed app
             const categoryContext = getCategoryContext(this._settings);
 
             const appsByCategory = {};
@@ -1184,7 +1187,17 @@ export const VerticalAppDisplay = GObject.registerClass({
         }
 
         // Gives empty category viewports a temporary pickable area for the
-        // duration of a drag. Add real, but invisible child. Removed again once
+        // duration of a drag, so get_actor_at_pos() alone can find them as
+        // drop targets. An empty viewport is otherwise zero-size: our own
+        // VerticalLayout.vfunc_get_preferred_width/height() explicitly
+        // return [0, 0] when there are no children, which completely
+        // bypasses CSS min-height/min-width (that was tried first and
+        // didn't work, since the custom layout manager's own vfunc
+        // overrides whatever the CSS would otherwise contribute). Adding a
+        // real, sized-but-invisible child instead makes the layout manager
+        // compute a genuine non-zero size the normal way - the same code
+        // path that already works correctly for populated categories -
+        // rather than fighting its logic from outside. Removed again once
         // the drag ends, so browsing the grid normally is unaffected.
         _setEmptyCategoryDropTargetsActive(active) {
             const size = this._settings.get_int('icon-size');
@@ -1276,7 +1289,7 @@ export const VerticalAppDisplay = GObject.registerClass({
                                 }
                                 this._highlightedView = foundView;
                                 try {
-                                    if (this._highlightedView) this._highlightedView.set_style('box-shadow: inset 0 0 0 2px rgba(255,255,255,0.08); background-color: rgba(255,255,255,0.02);');
+                                    if (this._highlightedView) this._highlightedView.set_style('box-shadow: inset 0 0 0 2px rgba(255,255,255,0.08); background-color: rgba(255,255,255,0.02); border-radius: 12px;');
                                 } catch {
                                     // View may have been disposed mid-drag; nothing to do.
                                 }
@@ -1588,8 +1601,7 @@ export const VerticalAppDisplay = GObject.registerClass({
                 return this._appIcons[index > 0 ? index - 1 : last];
             }
 
-            // Up/Down: try moving a full row within the current section's
-            // own grid first.
+            // Up/Down: try moving a full row within the current section's own grid first.
             if (localIndex !== -1) {
                 const targetLocalIndex = key === Clutter.KEY_Down ? localIndex + columns : localIndex - columns;
                 if (targetLocalIndex >= 0 && targetLocalIndex < viewChildren.length) {

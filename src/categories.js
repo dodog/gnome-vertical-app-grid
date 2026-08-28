@@ -237,34 +237,44 @@ export function getCategoryIconMap(settings) {
     return map;
 }
 
-// app-category-overrides use appId::category::index encoding. These helpers
-// centralize parse/format logic.
+// app-category-overrides stores one JSON string per strv element
 function _encodeOverrideEntry(appId, category, index) {
-    if (index !== null && index !== undefined) {
-        return `${appId}::${category}::${Math.floor(index)}`;
-    }
-    return `${appId}::${category}`;
+    return JSON.stringify({
+        id: appId,
+        category,
+        index: (index !== null && index !== undefined) ? Math.floor(index) : null
+    });
 }
 
 function _parseOverrideEntry(entry) {
-    const parts = entry.split('::');
-    if (parts.length < 2) {
+    try {
+        const parsed = JSON.parse(entry);
+        if (!parsed || typeof parsed !== 'object' || !parsed.id || !parsed.category) {
+            return null;
+        }
+
+        let index = null;
+        if (parsed.index !== null && parsed.index !== undefined) {
+            const numericIndex = Number(parsed.index);
+            index = Number.isFinite(numericIndex) ? numericIndex : null;
+        }
+
+        return {
+            id: String(parsed.id),
+            category: String(parsed.category),
+            index
+        };
+    } catch (e) {
+        console.debug(`vertigrid: Failed to parse app category override entry: ${e}`);
         return null;
     }
-
-    const id = parts[0];
-    const category = parts[1];
-    const parsedIndex = parts.length >= 3 ? parseInt(parts[2], 10) : null;
-
-    return {
-        id,
-        category,
-        index: Number.isFinite(parsedIndex) ? parsedIndex : null
-    };
 }
 
 function _removeOverrideEntriesForApp(arr, appId) {
-    return arr.filter(e => !e.startsWith(appId + '::'));
+    return arr.filter(entry => {
+        const parsed = _parseOverrideEntry(entry);
+        return !parsed || parsed.id !== appId;
+    });
 }
 
 function _loadOverrides(settings) {
@@ -443,12 +453,7 @@ function _isValidTargetCategory(currentCategories, name) {
 
 /**
  * Precompute the pieces getAppCategory() needs - the merged category list
- * and the override map - once. A caller classifying many apps in a loop
- * (e.g. appDisplay.js building the whole grid) should call this once up
- * front and pass the same context into every getAppCategory() call, rather
- * than each of those calls independently re-reading and re-parsing
- * settings (custom-categories, app-category-overrides) for what is, within
- * a single pass, always the same result.
+ * and the override map - once. 
  */
 export function getCategoryContext(settings) {
     return {
