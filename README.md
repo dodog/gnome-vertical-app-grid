@@ -15,7 +15,7 @@
 ## ✨ Features
 
 ### 🚀 Category-Based App Organization
-- **Vertical app grid in GNOME Shell overview**
+- **Vertical app grid menu in GNOME Shell overview**
 
 - **Smart Categorization**: Automatically groups apps by their desktop file categories (Development, Office, Graphics, Games, etc.)
     
@@ -33,9 +33,9 @@
     
 - **Flexible Columns**: Adjust the number of columns from to suit your screen size and preference
     
-- **Customizable Icon Size**, Adjustable Icon Spacing
+- **Customisable Icon Size**, Adjustable Icon Spacing
     
-- **Category Label Size**: Customize the font size of category navigation labels
+- **Category Label Size**: Customise the font size of category navigation labels
   
 - **Smooth Scrolling**: Enjoy animated scrolling through the app grid
     
