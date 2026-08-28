@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: VertiGrid 1.0\n"
 "Report-Msgid-Bugs-To: https://github.com/dodog/vertigrid/issues\n"
-"POT-Creation-Date: 2026-08-14 12:46+0200\n"
+"POT-Creation-Date: 2026-08-28 13:42+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jozef Gaal <preklady@mayday.sk>\n"
 "Language-Team: Jozef Gaal <preklady@mayday.sk>\n"
@@ -17,15 +17,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.9\n"
 
-#: extension.js:320
+#: extension.js:312
 msgid "Remove from Favorites"
 msgstr "Odstrániť z obľúbených"
 
-#: extension.js:321
+#: extension.js:313
 msgid "Add to Favorites"
 msgstr "Pridať medzi obľúbené/do doku"
 
-#: extension.js:335
+#: extension.js:324
 msgid "Hide this app"
 msgstr "Skryť túto aplikáciu"
 
@@ -81,7 +81,7 @@ msgstr "Systém"
 msgid "Settings"
 msgstr "Nastavenia"
 
-#: appDisplay.js:99 appDisplay.js:393 appDisplay.js:621
+#: appDisplay.js:99 appDisplay.js:393 appDisplay.js:622
 msgid "Favorites"
 msgstr "Obľúbené"
 
@@ -89,7 +89,7 @@ msgstr "Obľúbené"
 msgid "All Apps"
 msgstr "Všetky aplikácie"
 
-#: appDisplay.js:456 appDisplay.js:635
+#: appDisplay.js:457 appDisplay.js:636
 msgid "Other"
 msgstr "Ostatné"
 
@@ -110,71 +110,71 @@ msgstr ""
 msgid "No apps are currently hidden."
 msgstr "Žiadne aplikácie nie sú teraz skryté."
 
-#: prefs.js:123
+#: prefs.js:127
 msgid "Restore"
 msgstr "Obnoviť"
 
-#: prefs.js:167
+#: prefs.js:171
 msgid "Add category"
 msgstr "Pridať kategóriu"
 
-#: prefs.js:179
+#: prefs.js:183
 msgid "Save Custom Categories"
 msgstr "Uložiť vlastné kategórie"
 
-#: prefs.js:227
+#: prefs.js:231
 msgid "Category name (e.g. Fonts)"
 msgstr "Názov kategórie (napr. Písma)"
 
-#: prefs.js:238
+#: prefs.js:242
 msgid "Enabled"
 msgstr "Povolené"
 
-#: prefs.js:260
+#: prefs.js:264
 msgid "Built-in"
 msgstr "Vstavané"
 
-#: prefs.js:275
+#: prefs.js:279
 msgid "Merge into another category"
 msgstr "Zlúčiť do inej kategórie"
 
-#: prefs.js:282
+#: prefs.js:286
 msgid "Target category name (e.g. Webdesign)"
 msgstr "Názov cieľovej kategórie (napr. Webdizajn)"
 
-#: prefs.js:307
+#: prefs.js:311
 msgid "Custom order"
 msgstr "Vlastné poradie"
 
-#: prefs.js:326
+#: prefs.js:330
 msgid "Lower numbers appear first"
 msgstr "Nižšie číslo sa zobrazí skôr"
 
-#: prefs.js:359 prefs.js:377
+#: prefs.js:363 prefs.js:381
 msgid "Default icon"
 msgstr "Predvolená ikona"
 
-#: prefs.js:368
+#: prefs.js:372
 msgid "Choose Icon…"
 msgstr "Vybrať ikonu…"
 
-#: prefs.js:436
+#: prefs.js:440
 msgid "Default categories"
 msgstr "Predvolené kategórie"
 
-#: prefs.js:474
+#: prefs.js:478
 msgid "Failed to save custom categories: "
 msgstr "Uloženie vlastných kategórií sa nepodarilo: "
 
-#: prefs.js:486
+#: prefs.js:490
 msgid "Custom Categories Saved"
 msgstr "Vlastné kategórie boli uložené"
 
-#: prefs.js:491
+#: prefs.js:495
 msgid "OK"
 msgstr "Ok"
 
-#: prefs.js:517
+#: prefs.js:521
 msgid ""
 "Your custom category settings have been \n"
 "saved and applied to the app grid."
@@ -182,45 +182,37 @@ msgstr ""
 "Vaše nastavenia vlastných kategórií boli \n"
 "uložené a použité v mriežke aplikácií."
 
-#: prefs.js:536
+#: prefs.js:540
 msgid "Choose an Icon"
 msgstr "Vyberte ikonu"
 
-#: prefs.js:542
+#: prefs.js:546
 msgid "Cancel"
 msgstr "Zrušiť"
 
-#: prefs.js:543
+#: prefs.js:547
 msgid "Use Default Icon"
 msgstr "Použiť predvolenú ikonu"
 
-#: prefs.js:548
+#: prefs.js:552
 msgid "Search symbolic icons (e.g. mail, folder, web)…"
 msgstr "Vyhľadať symbolické ikony (napr. mail, folder, web)…"
 
-#: prefs.js:576
+#: prefs.js:580
 msgid "Start typing to search your system’s symbolic icons."
 msgstr "Začnite písať a vyhľadajte symbolické ikony vo vašom systéme."
 
-#: prefs.js:691
-msgid "Category name cannot contain \"::\": "
-msgstr "Názov kategórie nemôže obsahovať \"::\": "
-
-#: prefs.js:699
+#: prefs.js:693
 msgid "Duplicate category name: "
 msgstr "Duplicitný názov kategórie: "
 
-#: prefs.js:713
+#: prefs.js:707
 msgid "Enter a target category to merge \""
 msgstr "Zadajte cieľovú kategóriu, do ktorej chcete zlúčiť \""
 
-#: prefs.js:713
+#: prefs.js:707
 msgid "\" into, or uncheck \"Merge into another category\"."
 msgstr "\" alebo zrušte označenie políčka „Zlúčiť do inej kategórie“."
-
-#: prefs.js:720
-msgid "Merge target cannot contain \"::\": "
-msgstr "Cieľová kategória zlúčenia nemôže obsahovať \"::\": "
 
 #: prefs.ui:7
 msgid "App Grid"
@@ -352,6 +344,12 @@ msgstr ""
 "s názvom existujúcej kategórie (napr. zlúčiť „Písma“ s „Vývoj“). \n"
 "Pre každú kategóriu, či už predvolenú alebo vlastnú, si môžete tiež nastaviť "
 "vlastné poradie – nižšie čísla sa zobrazujú skôr."
+
+#~ msgid "Category name cannot contain \"::\": "
+#~ msgstr "Názov kategórie nemôže obsahovať \"::\": "
+
+#~ msgid "Merge target cannot contain \"::\": "
+#~ msgstr "Cieľová kategória zlúčenia nemôže obsahovať \"::\": "
 
 #~ msgid "Category Navigation"
 #~ msgstr "Ponuka kategórií"
