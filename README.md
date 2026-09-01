@@ -79,7 +79,7 @@
 ## 📦 Installation
 
 ### 1. One-line installer (Recommended)
-1. Copy and paste the install command into terminal:
+Copy and paste the install command into terminal:
 ```bash
 curl -fsSL https://raw.githubusercontent.com/dodog/vertigrid/main/get.sh | bash
 ```
