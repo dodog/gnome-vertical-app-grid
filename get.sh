@@ -30,17 +30,32 @@ else
     if command -v gsettings >/dev/null && command -v python3 >/dev/null; then
         python3 - "$UUID" <<'PY'
 import subprocess, sys, ast
+
+def get_strv(key):
+    out = subprocess.run(
+        ["gsettings", "get", "org.gnome.shell", key],
+        capture_output=True, text=True).stdout.strip()
+    try:
+        return ast.literal_eval(out) if out and out != "@as []" else []
+    except (ValueError, SyntaxError):
+        return []
+
+def set_strv(key, items):
+    subprocess.run(
+        ["gsettings", "set", "org.gnome.shell", key,
+         "[" + ", ".join("'%s'" % i for i in items) + "]"],
+        check=True)
+
 uuid = sys.argv[1]
-key = ["org.gnome.shell", "enabled-extensions"]
-cur = subprocess.run(["gsettings", "get", *key], capture_output=True, text=True).stdout.strip()
-try:
-    items = ast.literal_eval(cur) if cur and cur != "@as []" else []
-except (ValueError, SyntaxError):
-    items = []
-if uuid not in items:
-    items.append(uuid)
-subprocess.run(["gsettings", "set", *key,
-                "[" + ", ".join("'%s'" % i for i in items) + "]"], check=True)
+
+disabled = get_strv("disabled-extensions")
+if uuid in disabled:
+    set_strv("disabled-extensions", [i for i in disabled if i != uuid])
+
+enabled = get_strv("enabled-extensions")
+if uuid not in enabled:
+    enabled.append(uuid)
+    set_strv("enabled-extensions", enabled)
 PY
         echo ":: Registered in enabled-extensions. Log out and back in to see it."
     else
