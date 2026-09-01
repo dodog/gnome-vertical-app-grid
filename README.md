@@ -78,11 +78,14 @@
 
 ## 📦 Installation
 
-### From GNOME Extensions Website (Recommended)
+### 1. One-line installer (Recommended)
+1. Copy and paste the install command into terminal:
+```bash
+curl -fsSL https://raw.githubusercontent.com/dodog/vertigrid/main/get.sh | bash
+```
 
-Visit [extensions.gnome.org](https://extensions.gnome.org/) and search for "VertiGrid" or visit the extension's page directly.
 
-### Manual Installation
+### 2. Manual Installation
 
 1.  Clone the repository:
 
